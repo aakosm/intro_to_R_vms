@@ -26,7 +26,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 
 > Main packages used: `haven`, `readxl`, `readr`   
-> Main functions covered: `readr::read_csv`, `readxl::read_excel`, `haven::read_stata` `haven::read_spss`, `haven::read_sas`, `write.table()`  
+> Main functions covered: `readr::read_csv`, `readr::write_csv`, `readxl::read_excel`, `haven::read_stata` `haven::read_spss`  
 
 
 > **Supplementary resources:** 
@@ -90,12 +90,12 @@ qog_text <- readr::read_csv("https://rawgit.com/aakosm/r_basics_ecpr18/master/qo
 
 ```
 
-If you have the data downloaded you can load it from your project folder. In the code below, I put the data file into the data folder within my project folder. (the path looks like this: `mydrive:/folder/project_folder/data`). The `"\data\file.csv` is called the relative path, as when using project we do not need to type out the whole path to the file, just its relative location to our main project folder. 
+If you have the data downloaded you can load it from your project folder. In the code below, I put the data file into the data folder within my project folder. (the path on a computer would look like this: `mydrive:/folder/project_folder/data`). The `"\data\file.csv` is called the relative path. When using projects we do not need to type out the whole path to the file, just its relative location to our main project folder. 
 
 
 ```{r}
 
-qog_text <- read_delim("data/qog_bas_cs_jan18.csv", delim = ",")
+qog_text <- readr::read_delim("data/qog_bas_cs_jan18.csv", delim = ",")
 ```
 
 
@@ -107,7 +107,7 @@ With the `readr::read_csv` I specified that I use the function from that specifi
 Next we are loading the excel file. We use the `readxl` package's `read_excel` function to load the file (it does not support opening files via urls unfortunately).  
 
 ```{r}
-qog_excel <- read_excel("data/qog_bas_cs_jan18.xlsx")
+qog_excel <- readxl::read_excel("data/qog_bas_cs_jan18.xlsx")
 ```
 
 
@@ -119,10 +119,10 @@ Importing data files from Stata 13+, SPSS, and SAS works similarly, using the `h
 
 ```{r}
 # read the Stata .dta file
-qog_stata <- read_stata("data/qog_bas_cs_jan18.dta")
+qog_stata <- haven::read_stata("data/qog_bas_cs_jan18.dta")
 
 # read the SPSS .sav file
-qog_spss <- read_spss("data/qog_bas_cs_jan18.sav")
+qog_spss <- haven::read_spss("data/qog_bas_cs_jan18.sav")
 
 ```
 
@@ -216,9 +216,9 @@ If you are interested only a certain number of observations and columns, you can
 head(gapminder_df, 3)
 ```
 
-or check the 1:3 rows of the first two variables.
+or check the 1:3 rows of the first four variables.
 ```{r}
-head(gapminder_df[1:3, 1:2])
+head(gapminder_df[1:3, 1:4])
 ```
 
 
@@ -226,7 +226,6 @@ If you want to have a quick overview of your data, both `str()` and `dplyr::glim
 
 ```{r}
 str(gapminder_df)
-
 ```
 
 Both the `str` and `glimpse` function print out parts of your data set, the main differences between them and the head is they give you a complete look at your list of variables and their types.
@@ -249,9 +248,7 @@ summary(gapminder_df)
 
 For the categorical variables you can use `table()` which generates a frequency table. 
 ```{r}
-freq_table <- table(gapminder_df$continent)
-
-freq_table
+table(gapminder_df$continent)
 ```
 
 ## Using the "tidyverse"
@@ -409,7 +406,13 @@ ggplot(data = gapminder_df,
 
 ```
 
-Let's refine this plot slightly: add labels, title, caption, and also transform the GDP variable. (plus some other minor cosmetics)
+Let's refine this plot slightly:
+
+1. add labels with `labs()`
+2. title, 
+3. caption, 
+4. transform the GDP variable with `scale_x_log10()`
+5. (plus some other minor cosmetics)
 
 Check the comments in the code snippet to see what each line does!
 
@@ -419,7 +422,7 @@ ggplot(data = gapminder_df,
                      y = lifeExp)) +
   geom_point(alpha = 0.25) + # inside the geom_ we can modify its attributes. Here we set the transparency levels of the points
   scale_x_log10() + # rescale our x axis
-  labs(x = "GDP per capita", 
+  labs(x = "GDP per capita", # add captions and axis titles
        y = "Life expectancy",
        title = "Connection between GDP and Life expectancy",
        subtitle = "Points are country-years",

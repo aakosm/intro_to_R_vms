@@ -1,0 +1,404 @@
+---
+title: "Transforming and wrangling data 2/2"
+author: "Akos Mate"
+subtitle: "Session Four"
+date: '2020 July'
+output:
+    html_document:
+        code_folding: "show"
+        number_sections: TRUE
+        toc: true
+        toc_depth: 4
+        toc_float: true
+        theme: flatly
+        highlight: tango
+        css: ../rmd_style.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      collapse = TRUE,
+                      comment = "#>",
+                      message = FALSE
+)
+```
+
+
+> Main packages used: `dplyr`   
+> Main functions covered: `dplyr::filter()`, `dplyr::select()`, `dplyr::mutate()`, `dplyr::*_join()`, `is.na()`, `tidyr::drop_na()`
+
+
+> **Supplementary resources:**
+>
+> - [Suzan Baert's blogpost series](https://suzanbaert.netlify.com/2018/01/dplyr-tutorial-1/)
+> - [Data Wrangling cheat sheet](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)
+
+
+
+# Using `dplyr` to wrangle data
+
+This session will focus on various ways to subset our data using the tools of the `dplyr` package. We will use the gapminder data for demonstrations and the classic Iris dataset for practice in the excercises.
+
+```{r}
+library(dplyr) # for data manipulation
+library(ggplot2) # data visualization
+library(gapminder) # practice data
+```
+
+```{r}
+# load our data
+gapminder_df <- gapminder
+```
+
+
+## Selecting rows
+
+For subsetting **rows** we use the `filter()` function from `dplyr`. For the argument we can give similar logical operators as before. If we we want to see data for countries in 1962 where life expectancy was above 70 yrs we can do it with the following code:
+
+```{r}
+gapminder_df %>% 
+    filter(year == 1962, lifeExp > 70)
+
+```
+
+You can filter based on logical operators and string matching as well. Here we want to see data for sweden after 1990.
+
+```{r error=TRUE, collapse=FALSE}
+gapminder_df %>% 
+    filter(country == "Sweden", year > 1990)
+```
+
+We could also use the `x %in% y` expression which will filter every row where x matches one of the values of y. With this we can filter for two countries in our data.
+```{r}
+gapminder_df %>% 
+    filter(country %in% c("Sweden", "Norway"))
+```
+
+Filtering on a range can be done with two logical requirement or the `dplyr::between()` argument.
+
+```{r collapse=FALSE}
+gapminder_df %>% 
+    filter(lifeExp >= 40, lifeExp <= 40.5)
+
+```
+
+They give the same results.
+```{r}
+gapminder_df %>% 
+    filter(between(lifeExp, 40, 40.5))
+```
+
+
+We should try out more logical operators to filter. If you are just interested in the top results, you can select rows by their position with the `dplyr::slice()` function.
+
+```{r}
+slice(gapminder_df, 1:8) # select the first 8 rows
+```
+
+Some exaples of certain logical operators. To see the role of each line, check the comments in the code snippet below.
+```{r collapse=FALSE}
+gapminder_df %>% 
+    filter(continent == "Africa" & gdpPercap > 8000) # AND
+
+gapminder_df %>% 
+    filter(!continent %in% c("Africa", "Europe") ) # everything but Africa and Europe (!%in% won't work)
+
+gapminder_df %>% 
+    filter(year > 1990,  !lifeExp < 80) # we filter for the years after 1990 where the lifeExp < 80 condition is FALSE
+```
+
+
+
+
+> Quick excercise: filter the gapminder dataset to see countries in the Americas where life expectancy was between 75 and 80 after 1995. You should get something similar as below.
+
+Solution should look like this:
+```{r echo=FALSE}
+gapminder_df %>% 
+    filter(continent == "Americas",  
+           lifeExp >= 75, 
+           lifeExp <= 80, 
+           year > 1995)
+```
+
+## Selecting columns and re-ordering values
+
+For selection of **columns (variables)** we will use the, `dplyr::select()` function. The logic is the same as for filtering rows.
+
+```{r}
+gapminder_df %>% 
+    select(continent)
+
+```
+
+
+you can select multiple columns easily by their name
+```{r}
+gapminder_df %>% 
+    select(continent, year)
+```
+
+or give a range
+```{r}
+gapminder_df %>% 
+    select(country:year)
+```
+
+The select function works if you have a very large dataset and want to access columns by their location rather than their name. Let's say we want the first two and the fifth variable.
+```{r}
+gapminder_df %>% 
+    select(1:2, 5)
+```
+
+
+You can have remove columns with `select(data, -column)`. This code removs columns between year and gdp per capita. 
+```{r}
+gapminder_df %>% 
+    select(-(year:gdpPercap))
+```
+
+There are various helper functions that you can embed within `select`:
+
+* `starts_with("xyz")`: selects column where the name matches the specified `"xyz"` string.
+* `ends_with("jfk")`: matches the string ("jfk" in this case) with the end of the column name
+* `contains("klm")`: matches names that contain "klm"
+* `num_range("x", 1:3)`: matches x1, x2, x3
+
+> Quick Excercise: select columns where the variable name starts with "co"
+
+Solution should look like this:
+```{r echo=FALSE}
+gapminder_df %>% 
+    select(starts_with("co"))
+```
+
+
+The `select()` function also lets us do some other data manipulation tasks as well. You can use it to reorder and rename your variables. The order you specify the columns in the `select()` function will be the new order. You can also set the name with `select(newname = oldname)`, altough it that case it will drop all other columns not specified. To avoid this, you can be explicit about renaming with the `dplyr::rename()` function.
+
+```{r}
+# reorder our variables and rename them.
+gapminder_df %>% 
+    select(country, continent, year, gdpPercap, lifeExp, -pop) %>% # we reorder the columns and drop the pop column
+    rename(gdp_percap = gdpPercap, life_exp = lifeExp)
+
+```
+
+If you want you can store the column names in a character vector and plug that in to the function.
+
+```{r}
+vars <- c("lifeExp", "pop", "gdpPercap") # columns we want selected
+
+gapminder_df %>% 
+    select(vars)
+```
+
+We can also re-order our cases by a given column, either in descending or ascending order. The `dplyr::arrange()` function will re-order in ascending order by default.
+
+```{r}
+# lets pipe together a select and arrange function
+gapminder_df %>% 
+    select(lifeExp) %>% 
+    arrange(lifeExp)
+    
+```
+
+
+You can use `dplyr::desc()` within `arrange()` to order the values in descending order. 
+
+
+We can also combine `select`and `filter` for filtering for all of the selected variables. To do this, we use the `filter_all`  function and the `all_vars()` within it.
+
+
+> Quick excercise: Check the top5 countries in 2007 who had the highest life expectancy! You should get something similar as below. Use the functions that we have covered so far in this session!
+
+Solution should look like this:
+```{r echo=FALSE}
+gapminder_df %>% 
+    select(country, year, lifeExp) %>% 
+    arrange(desc(lifeExp)) %>% 
+    filter(year == 2007) %>% 
+    slice(1:5)
+```
+
+
+## Recoding and adding variables
+`dplyr` makes it easy to recode our columns and create new ones with the `dplyr::mutate()` and `dplyr::transmute()` functions. `mutate()` let's you do all the stuff that we covered when we looked at vectors. You have the option to have the calculation results in a new column (preferable) or overwrite an existing one (probably not the best idea).
+
+Let's recode the pop variable to show population by a thousand using the `mutate` function. We will call our new variable pop_k.
+
+```{r}
+
+gapminder_df %>% 
+    select(country, year, pop) %>% 
+    mutate(pop_k = pop/1000) # creating the new column, pop_k
+```
+
+We can carry out operations with our existing columns as well. Let's calculate the GDP from the GDP per capita and population data.
+
+```{r warning=TRUE, error=TRUE, collapse=FALSE}
+gapminder_df %>% 
+    select(country, year, gdpPercap) %>% 
+    mutate(gdp = gdpPercap * pop)
+```
+
+What is the problem? We should be careful about the order we pipe together various functions.
+
+```{r}
+gapminder_df %>% 
+    mutate(gdp_mil = ((gdpPercap * pop)/10^6)) %>% # multiply the two columns and then divide by a million
+    select(country, year, gdp_mil) 
+```
+
+
+
+Use the `transmute()` function if you only need the new variables.
+
+```{r}
+gdp <- gapminder_df %>% 
+    transmute(gdp = gdpPercap * pop)
+
+
+head(gdp, 5)
+```
+
+
+
+## Joining data frames
+
+(All figures and examples in this section are from the [R for Data Science ch13](http://r4ds.had.co.nz/relational-data.html))
+
+In this section we'll cover how to join together two datasets. For this, `dplyr` provides us the `*_join()` function family. The `join()` functions take two data frames and join them together using a column that is the same in both data set and contains unique identifiers for each row. These are called **keys**. 
+
+First, let's create a two dummy data frame to practice on. In this case we have the id columns as our key that we will use to join together the two data frames.
+
+```{r}
+x <- data.frame(id = c(1,2,3),
+                val_x = c("x1", "x2", "x3"))
+
+y <- data.frame(id = c(1,2,4),
+                val_y = c("y1", "y2", "y3"))
+```
+
+
+### Inner join
+
+This join uses the key to match every value to its matching key. If there are no match for a row it will get dropped during the join. This means that you can lose observations when you join two data frame this way!
+
+```{r, out.width = "350px", echo=FALSE}
+knitr::include_graphics("figures/join-inner.png")
+```
+
+```{r}
+x %>% 
+    inner_join(y, by = "id")
+```
+
+
+### Left/right/full join
+
+If you want to preserve all your observations you can use:
+
+* `left_join(x,y)` which keeps all observations in `x`
+* `right_join(x,y)` which keeps all observations in `y`
+* `full_join(x,y)` which keep all observations both in `x` and `y`
+
+
+```{r, out.width = "350px", echo=FALSE}
+knitr::include_graphics("figures/join-outer.png")
+```
+
+> Quick excercise: try out left join and full join with our dummy data frames to see what happens!
+
+What is the key column in our gapminder data?
+
+```{r}
+head(gapminder_df, 5)
+```
+
+We can create a unique id by assigning row numbers to a column with the `row_number()` function.
+
+```{r}
+gapminder_df %>% 
+    mutate(id = row_number()) %>% 
+    select(id, everything()) # everything() is a nice helper function if you want to move one important column to the beggining
+```
+
+
+
+# Dealing with missing data
+
+For this, we'll use a data set with sleep data on mammals. Notice the `NA`s in the summary.
+
+```{r}
+msleep <- msleep
+
+summary(msleep)
+```
+
+What sort of problem do they cause? If you have a large amount of missing data that indicates that your data might not be the best in terms of quality and also some computations in R are really uptight about them. Some others just drop NA's.
+
+```{r collapse=FALSE}
+mean(msleep$sleep_rem)
+
+sum(msleep$sleep_rem)
+
+sd(msleep$sleep_rem)
+```
+
+The solution is to tell these functions to ignore the NA's, with the `na.rm = TRUE` argument.
+
+```{r}
+mean(msleep$sleep_rem, na.rm = TRUE)
+```
+
+For a broader solution, we can get rid of the NA's from our dataset (if they do not convey meaningful information). There are numerous ways of dealing with missing data, such as dropping every case where a value is missing, multiple imputation, dropping variables, etc. Of course how your NA's are distributed matters (are they missing (not) at random?). We won't go into details, and opt to drop observations with missing values. Not elegant but get's the job done for now.
+
+BUT! before we proceed to drop our NA's, let's check how many cases are we talking about. For this, we will use two approach, the `is.na` function and the `complete.cases`. Both of them return a logical value (`TRUE` or `FALSE`), which we can just sum to see how many NA's we have.
+
+Let's create a quick numerical vector for checking how the functions work.
+```{r}
+na_test <- c(1, 3, NA, 5, NA) 
+```
+
+Using the `is.na()` approach.
+```{r}
+is.na(na_test)
+
+
+sum(is.na(na_test)) # the number of NA's in our numerical vector
+```
+
+Or the `complete.cases()` approach
+```{r}
+complete.cases(na_test)
+
+sum(complete.cases(na_test))
+```
+
+
+The first function to deal with missing data by deletion is from `base R` is `na.omit`. NOTE: it performs a rowwise deletion so each row that contains an NA will get deleted. 
+
+Illustration:
+```{r}
+missing_df <- data.frame(x = c(1, 2, 3),
+                         y = c(5, NA, 6))
+
+na.omit(missing_df)
+```
+
+Now let's deal with our original dataset and eliminate all the missing data. Don't forget to create a new object for your data, instead of overwriting your previous one. 
+
+```{r}
+msleep_clean <- na.omit(msleep)
+
+sum(is.na(msleep_clean))
+```
+
+Or we can use the `tidyr::drop_na` from the `tidyr` package. This similarly operates with rowwise deletion.
+
+```{r}
+msleep %>% 
+    tidyr::drop_na() %>% 
+    summary()
+```
+

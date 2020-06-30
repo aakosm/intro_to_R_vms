@@ -2,7 +2,7 @@
 title: "A Gentle Introduction"
 subtitle: "Session One"
 author: "Akos Mate"
-date: '2019 July'
+date: '2020 July'
 output:
     html_document:
         code_folding: "show"

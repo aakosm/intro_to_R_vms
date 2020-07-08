@@ -31,7 +31,7 @@ knitr::opts_chunk$set(echo = TRUE,
 > **Supplementary resources:**
 >
 > - [Suzan Baert's blogpost series](https://suzanbaert.netlify.app/2018/01/dplyr-tutorial-1/)
-> - [Data Wrangling cheat sheet](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)
+> - [Data Wrangling cheat sheet](https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-transformation.pdf)
 
 
 

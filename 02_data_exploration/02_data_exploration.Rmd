@@ -31,7 +31,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 > **Supplementary resources:** 
 >
-> - [Data import cheat sheet](https://ugoproto.github.io/ugo_r_doc/data-import.pdf)
+> - [Data import cheat sheet](https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-import.pdf)
 > - [R packages for statistical data sets](https://ikashnitsky.github.io/2017/data-acquisition-two/)    
 
 # Importing data into R

@@ -2,7 +2,7 @@
 title: "Data visualisation with `ggplot2`"
 author: "Akos Mate"
 subtitle: "Session Five"
-date: '2019 July'
+date: '2020 July'
 output:
     html_document:
         code_folding: "show"
@@ -32,7 +32,7 @@ knitr::opts_chunk$set(echo = TRUE,
 > - [Data Visualization - A practical introduction](http://socviz.co/) from Kieran Healey.
 > - [Fundamentals of Data Visualization](https://serialmentor.com/dataviz/) by Claus O. Wilke
 > - [R Graphics Cookbook](https://r-graphics.org/) by Winston Chang
-> - [ggplot2 cheat sheet](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+> - [ggplot2 cheat sheet](https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-visualization-2.1.pdf)
 > - [list of ggplot2 extensions](https://www.ggplot2-exts.org/)
 
 

@@ -30,7 +30,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 > **Contact info**
 >
-> - Akos: aakos.mate@gmail.com <br>
+> - Akos: Mate.Akos@tk.mta.hu <br>
 > - Daniel: Kovarek_Daniel@phd.ceu.edu
 
 

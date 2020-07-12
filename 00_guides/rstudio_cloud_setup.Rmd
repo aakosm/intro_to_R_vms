@@ -1,0 +1,14 @@
+---
+title: "RStudio Cloud account"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Create your Rstudio Cloud account
+
+You can create your account at [Rstudio.cloud](https://rstudio.cloud/). 
+
+the link: https://rstudio.cloud/spaces/74644/join?access_code=nbj37H46NN77%2BLQL7zy2BMYYzmt%2B1YJoyqlwzbaz

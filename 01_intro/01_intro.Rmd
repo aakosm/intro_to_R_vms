@@ -45,7 +45,7 @@ Some information about these html documents. They are called notebooks, and they
 
 At the start of each new section you'll see a list of the main packages used for the following parts, the main functions covered and also some additional materials, resources that you'll find helpful. 
 
-There are some sections marketd (OPTIONAL), these ones I won't cover due to time limit, but you can check them out on your own and have a go at them.
+*There are some sections marked (OPTIONAL), these ones I won't cover due to time limit, but you can check them out on your own and have a go at them.*
 
 
 
@@ -87,21 +87,21 @@ knitr::include_graphics("figures/r_users.png")
 The goals of this course:
 
 - Hands on experience with R
-- de-mistify coding, hopefully be a positive first impression
+- De-mystify coding, hopefully be a positive first impression
 - Equip you with a solid knowledge base of R and its ecosystem
 - Walk through from the basics to producing meaningful analysis
 - Heavy emphasis on visualization
-- Cover all the steps of the research workflow: data cleaning -> data wrangling -> exploratory analysis -> modelling -> reporting
+- Cover all the steps of the research workflow: data cleaning -> data wrangling -> exploratory analysis -> modeling -> reporting
 - Preparing you on how to get into R more if you want to 
 
 
 
 ## Course outline
 
-> - Monday 27 ꟷ Friday 31 July 2020
-> - ~2 hours of live teaching per day
+> - Monday 27 - Friday 31 July 2020
+> - ~2 hours of live teaching per day (this includes breaks, Q&A)
 
-The course is organized into four blocks, each a logical unit. The actual topics that we are going to cover fit into 8 categories, so we have 2 sessions' lenght of time buffer (previous years' experience shows that the 8 sessions actually fill the allocated time).
+The course is organized into four blocks, each a logical unit. The actual topics that we are going to cover fit into 8 categories, so we have 2 sessions' length of time buffer (previous years' experience shows that the 8 sessions actually fill the allocated time).
 
 
 
@@ -159,7 +159,7 @@ The course is organized into four blocks, each a logical unit. The actual topics
 
 > Supplimentary resources: [RStudio IDE Cheat Sheet](https://www.rstudio.com/wp-content/uploads/2016/01/rstudio-IDE-cheatsheet.pdf)  
 
-R comes with a pretty spartan GUI so we will work with the RStudio IDE (integrated development environment). In the first half of the course we will use **RStudio Cloud**, which a browser based option and let's us get into R very quickly. Late in the course you'll install RStudio on your computer and learn to set up projects and everything necessary to carry out your own research.
+R comes with a pretty spartan GUI so we will work with the RStudio IDE (integrated development environment). In the first part of the course we will use **RStudio Cloud**, which a browser based option and let's us get into R very quickly. Late in the course you'll install RStudio on your computer and learn to set up projects and everything necessary to carry out your own research.
 
 The reasons we start with RStudio Cloud are that:
 
@@ -231,7 +231,7 @@ The 4.th Pane shows multiple important things. Firstly, in the **Files** view yo
 
 Hopefully this section is old news for you because you've already read the only compulsory reading we had: Jenny Brian's blogpost on Project-oriented workflow [Project-oriented workflow](https://www.tidyverse.org/blog/2017/12/workflow-vs-script/).
 
-Using Projects with RStudio will simplify your and your collabolators' life. Essentially, **all your project related files are collected in your selected folder so you don't need to specify a working directory.** Your project will be able to run as long as you copy the entire folder.
+Using Projects with RStudio will simplify your and your collaborators' life. Essentially, **all your project related files are collected in your selected folder so you don't need to specify a working directory.** Your project will be able to run as long as you copy the entire folder.
 
 For now, we are going to use RStudio Cloud projects for our first few sessions that I set up, so you can get the hang of it. Later on we'll get into setting up projects on your local computer. Before starting work, please set the highlighted options according the below figure, under **`Tools` -> `Global Options` -> `General`**
 
@@ -239,8 +239,6 @@ For now, we are going to use RStudio Cloud projects for our first few sessions t
 knitr::include_graphics("figures/02_project_options.png")
 ```
 
-
-For more help and materials on using projects, see [RStudio's own resource page](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects)
 
 
 ### Before we move on
@@ -251,7 +249,7 @@ Let's talk about keeping your R and other projects safe from tornadoes, toddlers
 > - Check the [R coding style guide](http://style.tidyverse.org/index.html)  
 > - Comment your codes heavily (with the `#`) because now seemingly straightforward code will not be so in the future (tomorrow morning)  
 > - Use sensible file names (e.g.: `01_data_cleaning.R`)  
-> - R is case sensitive, so use lowercase file and variable names. Separate words with underscore `_` (e.g.: `ols_reg_1`) (or you can do the camelCase thing, but be consistent)
+> - R is case sensitive, so use lowercase file and variable names. Separate words with underscore `_` (e.g.: `ols_1`) (or you can do the camelCase thing, but be consistent)
 
 
 ## Getting help and citing R and packages
@@ -284,7 +282,7 @@ Some effective ways to seek help with R related problems:
 - Google “R” followed by the error message (or part of it) that R gives you. 
 - In most of the cases one of the first hits will be a topic on [StackOverflow](https://stackoverflow.com/). You can use it to ask your own questions, BUT check if it is not a duplicate because there is a good chance that someone else already encountered the same problem that you are searching for.
 
-**Since R is an open source project it is a common courtesy to cite R and the packages you use**, as people (often in academia) put many hours into developing tools and it is in our common interest to give some public recognition to these efforts and contributions. To see how to cite R or you can just type the following:
+**Since R is an open source project it is a common courtesy to cite R and the packages you use**, as people (often working in academia) put many hours into developing tools and it is in our common interest to give some public recognition to these efforts and contributions. To see how to cite R or you can just type the following:
 
 ```{r}
 citation()
@@ -311,7 +309,7 @@ To get started:
 You can copy and paste code from this html document to your script and run it, but I recommend that you type everything as it allows for deeper learning experience. If you get stuck you can always check this document. Don't forget to **comment your code** with `#` (hashtag). Anything in the given line after `#` will not be taken into consideration when the code runs.
 
 
-**NOTE:** This first part is tedious. I get it. I know. Unfortunately these knowledge building block are neccesary to cover before we get to the juicy parts so we speak the same language (pun sort of intended). Please bear with me during this session I know for some it is boring because you know this, for some it seems to make no sense (it will, I promise) and for some this seems overly technical (I tried to keep the bare minimum). With this caveat, let's start coding in R!
+**NOTE:** This first part is tedious. I get it. I know. Unfortunately these knowledge building block are necessary to cover before we get to the juicy parts so we speak the same language (pun sort of intended). Please bear with me during this session I know for some it is boring because you know this, for some it seems to make no sense (it will, I promise) and for some this seems overly technical (I tried to keep the bare minimum). With this caveat, let's start coding in R!
 
 
 ## Getting started
@@ -398,11 +396,7 @@ log(10, base = 10)
 round(sin(5), 2)
 ```
 
-If you are in doubt what are the arguments of the given function, you can use `?help(function_name)`, `?function_name` or more directly
-```{r}
-args(round)
-```
-
+If you are in doubt what are the arguments of the given function, you can use `?help(function_name)` or `?function_name`.
 
 
 ## Data types, variables and data structures
@@ -734,13 +728,13 @@ as.Date(string_date)
 
 
 
-Coercing functions starts with `as.*`, where * marks the datatype. Start typing `as.` in RStudio and see how many functions are suggested with this beggining.
+Coercing functions starts with `as.*`, where * marks the datatype. Start typing `as.` in RStudio and see how many functions are suggested with this beginning.
 
 
 ## Combining stuff into data frame
 As promised before, we can weave all the vectors into one data frame. To do this, we use the `data.frame` function. First, we will create some vectors and then do the combination.
 
-The following excercise is purely to illustrate how various types of columns make up a data.frame. In reality we rarely create data within R, but I find it a good excercise to see how such an object is created. So now we will create data for an imaginary classroom of 5 pupils with their names, grades and height. All three columns are different type of data.
+The following exercise is purely to illustrate how various types of columns make up a data.frame. In reality we rarely create data within R, but I find it a good exercise to see how such an object is created. So now we will create data for an imaginary classroom of 5 pupils with their names, grades and height. All three columns are different type of data.
 
 ```{r}
 student <- c("Weber", "Hobbs", "Curie", "Lovelace", "Perlman")

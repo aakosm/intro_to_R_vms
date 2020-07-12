@@ -37,12 +37,13 @@ knitr::opts_chunk$set(echo = TRUE,
 
 # Using `dplyr` to wrangle data
 
-This session will focus on various ways to subset our data using the tools of the `dplyr` package. We will use the gapminder data for demonstrations and the classic Iris dataset for practice in the excercises.
+This session will focus on various ways to subset our data using the tools of the `dplyr` package. We will use the gapminder data for demonstrations and for the missing data section the Mammals sleep dataset.
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 library(dplyr) # for data manipulation
 library(ggplot2) # data visualization
-library(gapminder) # practice data
+library(gapminder) # practice data 
+
 ```
 
 ```{r}
@@ -61,9 +62,9 @@ gapminder_df %>%
 
 ```
 
-You can filter based on logical operators and string matching as well. Here we want to see data for sweden after 1990.
+You can filter based on logical operators and string matching as well. Here we want to see data for Sweden after 1990.
 
-```{r error=TRUE, collapse=FALSE}
+```{r }
 gapminder_df %>% 
     filter(country == "Sweden", year > 1990)
 ```
@@ -76,7 +77,7 @@ gapminder_df %>%
 
 Filtering on a range can be done with two logical requirement or the `dplyr::between()` argument.
 
-```{r collapse=FALSE}
+```{r }
 gapminder_df %>% 
     filter(lifeExp >= 40, lifeExp <= 40.5)
 
@@ -89,19 +90,19 @@ gapminder_df %>%
 ```
 
 
-We should try out more logical operators to filter. If you are just interested in the top results, you can select rows by their position with the `dplyr::slice()` function.
+If you are just interested in the top results, you can select rows by their position with the `dplyr::slice()` function.
 
 ```{r}
 slice(gapminder_df, 1:8) # select the first 8 rows
 ```
 
-Some exaples of certain logical operators. To see the role of each line, check the comments in the code snippet below.
+Some examples of certain logical operators. To see the role of each line, check the comments in the code snippet below.
 ```{r collapse=FALSE}
 gapminder_df %>% 
     filter(continent == "Africa" & gdpPercap > 8000) # AND
 
 gapminder_df %>% 
-    filter(!continent %in% c("Africa", "Europe") ) # everything but Africa and Europe (!%in% won't work)
+    filter(!continent %in% c("Africa", "Europe") ) # everything but Africa and Europe (note the position of the ! operator)
 
 gapminder_df %>% 
     filter(year > 1990,  !lifeExp < 80) # we filter for the years after 1990 where the lifeExp < 80 condition is FALSE
@@ -151,7 +152,7 @@ gapminder_df %>%
 ```
 
 
-You can have remove columns with `select(data, -column)`. This code removs columns between year and gdp per capita. 
+You can have remove columns with `select(data, -column)`. This code removes columns between year and GDP per capita. 
 ```{r}
 gapminder_df %>% 
     select(-(year:gdpPercap))
@@ -173,7 +174,7 @@ gapminder_df %>%
 ```
 
 
-The `select()` function also lets us do some other data manipulation tasks as well. You can use it to reorder and rename your variables. The order you specify the columns in the `select()` function will be the new order. You can also set the name with `select(newname = oldname)`, altough it that case it will drop all other columns not specified. To avoid this, you can be explicit about renaming with the `dplyr::rename()` function.
+The `select()` function also lets us do some other data manipulation tasks as well. You can use it to reorder and rename your variables. The order you specify the columns in the `select()` function will be the new order. You can also set the name with `select(newname = oldname)`, although it that case it will drop all other columns not specified. To avoid this, you can be explicit about renaming with the `dplyr::rename()` function.
 
 ```{r}
 # reorder our variables and rename them.
@@ -221,7 +222,7 @@ gapminder_df %>%
 ```
 
 
-## Recoding and adding variables
+## Recoding and creating new variables
 `dplyr` makes it easy to recode our columns and create new ones with the `dplyr::mutate()` and `dplyr::transmute()` functions. `mutate()` let's you do all the stuff that we covered when we looked at vectors. You have the option to have the calculation results in a new column (preferable) or overwrite an existing one (probably not the best idea).
 
 Let's recode the pop variable to show population by a thousand using the `mutate` function. We will call our new variable pop_k.
@@ -230,7 +231,7 @@ Let's recode the pop variable to show population by a thousand using the `mutate
 
 gapminder_df %>% 
     select(country, year, pop) %>% 
-    mutate(pop_k = pop/1000) # creating the new column, pop_k
+    mutate(pop_k = pop / 1000) # creating the new column, pop_k
 ```
 
 We can carry out operations with our existing columns as well. Let's calculate the GDP from the GDP per capita and population data.
@@ -245,7 +246,7 @@ What is the problem? We should be careful about the order we pipe together vario
 
 ```{r}
 gapminder_df %>% 
-    mutate(gdp_mil = ((gdpPercap * pop)/10^6)) %>% # multiply the two columns and then divide by a million
+    mutate(gdp_mil = ((gdpPercap * pop) / 10^6)) %>% # multiply the two columns and then divide by a million
     select(country, year, gdp_mil) 
 ```
 
@@ -320,17 +321,17 @@ We can create a unique id by assigning row numbers to a column with the `row_num
 ```{r}
 gapminder_df %>% 
     mutate(id = row_number()) %>% 
-    select(id, everything()) # everything() is a nice helper function if you want to move one important column to the beggining
+    select(id, everything()) # everything() is a nice helper function if you want to move one important column to the beginning
 ```
 
 
 
 # Dealing with missing data
 
-For this, we'll use a data set with sleep data on mammals. Notice the `NA`s in the summary.
+For this, we'll use a data set with sleep data on mammals (from the ggplot2 package) which is called `msleep`. Notice the `NA`s in the summary statistics.
 
 ```{r}
-msleep <- msleep
+msleep <- ggplot2::msleep
 
 summary(msleep)
 ```

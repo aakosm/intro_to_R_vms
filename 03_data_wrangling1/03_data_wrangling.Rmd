@@ -2,7 +2,7 @@
 title: "Transforming and wrangling data 1/2"
 subtitle: "Session Three"
 author: "Akos Mate"
-date: '2019 July'
+date: '2020 July'
 output:
     html_document:
         code_folding: "show"
@@ -47,7 +47,7 @@ From this session we will mostly start using packages from the `tidyverse` ecosy
 knitr::include_graphics("figures/tidyverse1.png")
 ```
 
-The "base R vs. tidyverse" debate has been going on in the R community for a while now, but it provides a quick and consisent way to start data analysis, strong community support and robust adoption rate in both inside and outside of academia. If you want some background thoughts on this, you can read a blogpost of David Robinson, data scientist at Heap on why teach tidyverse first: [http://varianceexplained.org/r/teach-tidyverse/](http://varianceexplained.org/r/teach-tidyverse/).
+The "base R vs. tidyverse" debate has been going on in the R community for a while now, but it provides a quick and consistent way to start data analysis, strong community support and robust adoption rate in both inside and outside of academia. If you want some background thoughts on this, you can read a blogpost of David Robinson, data scientist at Heap on why teach tidyverse first: [http://varianceexplained.org/r/teach-tidyverse/](http://varianceexplained.org/r/teach-tidyverse/).
 
 While the focus is on the tidyverse approach, the optional sections include alternative solutions, termed base R.
 
@@ -81,7 +81,7 @@ library(readr) # loading data
 ```
 
 
-We should use "tidy data" whenever possible. This means that each row is an observation and each column is a variable. This is best understood with this figure from the [R for Data Science](http://r4ds.had.co.nz/tidy-data.html):
+We should use "tidy data" whenever possible. This means that each row is an observation and each column is a variable. This is best understood with this figure from the [R for Data Science](http://r4ds.had.co.nz/tidy-data.html) book:
 
 
 ```{r, out.width = "650px", echo=FALSE}
@@ -118,6 +118,7 @@ The wide data format
 wide_df
 
 ```
+
 And the transformed long data format.
 ```{r echo=FALSE, collapse=FALSE}
 # long data format
@@ -133,7 +134,7 @@ knitr::include_graphics("figures/tidy_gather.png")
 
 We will use the `tidyr` package to shape our data into the desired format. A key concept is the key-value pairs. For the wide dataset above, the values are the inflation numbers and the keys are the column headers (years). So the `1.2` (2007 inflation in Hungary) and `2007` is such a key-value pair.
 
-We will use this concept to our transformations. The two main functions we'll use from `tidyr` are the `pivot_longer()` to create tidy data from wide data format. 
+We will use this concept to our transformations. The main function we'll use from `tidyr` are the `pivot_longer()` to create tidy data from wide data format. 
 
 Let's load our dummy dataset.
 

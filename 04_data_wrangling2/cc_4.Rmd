@@ -1,0 +1,194 @@
+---
+title: "Coding challanges for Session Four"
+subtitle: ""
+author: "Akos Mate"
+date: '2020 July'
+output:
+    html_document:
+        code_folding: "show"
+        number_sections: FALSE
+        toc: true
+        toc_depth: 4
+        toc_float: true
+        theme: flatly
+        highlight: tango
+        df_print: paged
+        css: ../rmd_style.css
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      collapse = TRUE,
+                      comment = "#>",
+                      message = FALSE,
+                      warning = FALSE
+)
+```
+
+
+
+```{r echo=FALSE}
+
+library(tidyverse)
+
+```
+
+
+
+# Excercise 1 - The `%>%` operator
+
+> Replicate the following code below *without* using the pipe (%>%) operator!
+
+```{r eval=FALSE}
+library(dplyr)
+library(titanic)
+
+titanic_df <- as.data.frame(Titanic)
+
+titanic_df_new <- titanic_df %>% 
+  filter(Survived == "Yes") %>% 
+  mutate(Class = recode(Class, "1st" = 1, "2nd" = 2, "3rd" = 3, "Crew" = 0)) %>%
+  mutate(Adult = recode(Age, "Child" = 0, "Adult" = 1)) %>%
+  select(-Age) %>% 
+  filter(Sex == "Female", Adult == 1)  
+```
+
+
+> Produce the same output as the code below *with* using the pipe (%>%) operator!
+
+
+```{r eval=FALSE}
+data(ToothGrowth) # result from an experiment studying the effect of vitamin C on tooth growth in 60 Guinea pigs
+
+toothgrowth_df <- as.data.frame(ToothGrowth)
+
+toothgrowth_df <- rename(toothgrowth_df, toothLenghth = len)
+toothgrowth_df <- rename(toothgrowth_df, supplementType = supp)
+toothgrowth_df <- filter(toothgrowth_df, between(toothLenghth, 10, 25.5))
+toothgrowth_df <- arrange(toothgrowth_df, dose)
+toothgrowth_df <- mutate(toothgrowth_df, dose_mcg = dose*1000) # converting milligrams to micrograms
+```
+
+
+
+
+# Excercise 2 - Data wrangiling with `dplyr`
+Use the `palmerpenguins` dataset for this exercise.
+
+```{r}
+penguins_df <- palmerpenguins::penguins
+```
+
+
+For reference on the variables used in this exercise:
+
+```{r out.width = "350px", echo=FALSE, fig.align='center'}
+
+knitr::include_graphics("figures/cc_culmen_depth.png")
+
+``` 
+
+(Artwork by @allison_horst)
+
+> (1) check your data, what are the variables, how many observations do we have and what types?  
+
+```{r echo=FALSE}
+glimpse(penguins_df)
+```
+
+> (2) how does the distribution of the variables look like?
+
+Example output with bill length.
+```{r echo=FALSE}
+ggplot(data = penguins_df,
+       mapping = aes(x = bill_length_mm)) +
+    geom_histogram()
+```
+
+
+> (3) create a summary table, with the standard deviation of bill lenght (use the `sd()`), grouped by every species.
+
+```{r echo=FALSE}
+#3
+penguins_df %>% 
+    group_by(species) %>% 
+    summarise(std.dev = sd(bill_length_mm))
+
+```
+
+
+> (4) Select all the variables that start with "bill" and put them into the `penguins_bill` object.
+
+```{r echo=FALSE}
+
+#4 
+penguins_bill <- penguins_df %>% 
+    select(starts_with("bill")) 
+```
+
+```{r}
+head(penguins_bill)
+```
+
+
+
+> (5) Create a scatter plot that shows the association between the bill attributes. The points should be colored by species.
+
+
+```{r echo=FALSE}
+#5
+ggplot(data = penguins_df,
+       mapping = aes(x = bill_length_mm,
+                     y = bill_depth_mm,
+                     color = species)) +
+    geom_point()
+```
+
+# Excercise 3 - Joining various datasets
+> Excercise:  
+> (1) install and load the `nycflights13` package
+> (2) load the `flights` and `airlines` data frames into the environment
+
+```{r}
+library(nycflights13)
+
+flights_df <- flights
+airlines_df <- airlines
+```
+
+
+> (3) check the variables in both data frames and search potential key(s). (hint: you can extract variable names with `names()` and use the `match()` function on them)
+
+```{r echo=FALSE, results=FALSE}
+names_flight <- names(flights_df)
+names_airlines <- names(airlines_df)
+
+match(names_airlines, names_flight)
+
+names_airlines
+
+names_flight[10]
+
+```
+
+
+> (4) perform a left join on the data frames using the key.
+
+After the join, the new dataset should look like this:
+```{r echo=FALSE}
+new_df <- left_join(flights_df, airlines_df, by = "carrier")
+
+```
+
+
+```{r echo=FALSE, eval=FALSE}
+# or just let the join function handle this headache
+new_df2 <- left_join(flights_df, airlines_df)
+```
+
+
+```{r}
+head(new_df)
+```
+

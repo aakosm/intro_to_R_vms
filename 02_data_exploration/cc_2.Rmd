@@ -1,0 +1,55 @@
+---
+title: "Coding challanges for Session Two"
+subtitle: ""
+author: "Akos Mate"
+date: '2020 July'
+output:
+    html_document:
+        code_folding: "show"
+        number_sections: FALSE
+        toc: true
+        toc_depth: 4
+        toc_float: true
+        theme: flatly
+        highlight: tango
+        df_print: paged
+        css: ../rmd_style.css
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      collapse = TRUE,
+                      comment = "#>",
+                      message = FALSE,
+                      warning = FALSE
+)
+```
+
+# Excercise 1 - Using `ggplot2`
+
+Load the gapminder data into the memory.
+
+```{r}
+library(gapminder)
+
+gapminder_df <- gapminder
+
+```
+
+> Plot the distribution of the life expectancy variable (lifeExp) from the gapminder dataset. 
+> Use the `labs()` argument to set a meaningful label for the x axis, and set a title for the plot.
+> Experiment with different `binwidth` values!
+
+The result should look something like this:
+
+```{r echo=FALSE}
+library(ggplot2)
+
+ggplot(gapminder, aes(lifeExp)) +
+  labs(x = "Life expectancy (years)",
+       y = "Count",
+       title = "Distribution of life expectancy",
+       caption = "Data: gapminder") +
+  geom_histogram()
+```

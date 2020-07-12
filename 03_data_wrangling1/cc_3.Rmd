@@ -1,0 +1,103 @@
+---
+title: "Coding challanges for Session Three"
+subtitle: ""
+author: "Akos Mate"
+date: '2020 July'
+output:
+    html_document:
+        code_folding: "show"
+        number_sections: FALSE
+        toc: true
+        toc_depth: 4
+        toc_float: true
+        theme: flatly
+        highlight: tango
+        df_print: paged
+        css: ../rmd_style.css
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      collapse = TRUE,
+                      comment = "#>",
+                      message = FALSE,
+                      warning = FALSE
+)
+```
+
+
+
+# Excercise 1 - Reshaping data
+> (1) load a data set on financial data of Microsoft and Tesla from the `03_data_wrangling1\data` folder from the file `stock_data.csv`.  
+> (2) The dataset contains 3 columns: a date and closing prices for Tesla and Microsoft shares.  
+> (3) Use the `gather()` function to create a new data frame, with 3 variables: date, company and stock_closing. You should see something similar than below.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(readr)
+
+stock_df <- read_csv("data/stock_data.csv")
+
+stock_tidy <- stock_df %>% 
+    gather("TSLA.Close", "MSFT.Close", key = "company", value = "stock_closing")
+
+```
+
+```{r}
+head(stock_tidy)
+```
+
+> (4) As a refresher, use the `group_by()` and `summarise()` functions to see the minimum, maximum and mean closing prices for the two company. Use the ` %>% ` pipe operator! You should get something similar as below.
+
+The desired output:
+```{r echo=FALSE}
+stock_tidy %>% 
+    group_by(company) %>% 
+    summarise(min = min(stock_closing), max = max(stock_closing), mean = mean(stock_closing))
+```
+
+> (5) Finally, use `ggplot2` to visualise the closing prices of the two company. Use the `geom_line()`! You should get a similar plot as below.
+
+```{r echo=FALSE}
+p_stock <- ggplot(stock_tidy,
+                  aes(date, stock_closing,
+                      color = company))
+
+p_stock +
+    geom_line() +
+    labs(x = "", y = "Prices (USD)",
+         title = "Closing daily prices for MSFT and TSLA",
+         subtitle = "Data from 2016-01-10 to 2018-01-10",
+         caption = "source: Yahoo Finance")
+    
+```
+
+# Excercise 2 - Appending data
+
+> (1) load additional data from `03_data_wrangling1\data` folder's `stock_data2.csv` file and perform the same reshaping with the `gather()` function as during our session.  
+> (2) then use `bind_rows()` to add the two new company to the previous `stock_tidy` data frame, by creating a new data frame, called `stock_tidy2`.  
+> (3) Use the %>% to pipe together your steps. Bonus: You can use the `unique()` function to check how many unique value you have in a given column.
+
+The output looks like this:
+```{r echo=FALSE}
+stock_tidy2 <- read_csv("data/stock_data2.csv")
+
+stock_tidy2 <- stock_tidy2 %>% 
+    gather("AAPL.Close", "F.Close", key = "company", value = "stock_closing") %>% 
+    bind_rows(stock_tidy)
+```
+
+
+
+```{r echo=FALSE}
+head(stock_tidy2, 5)
+```
+
+Unique companies in the dataset:
+```{r echo=FALSE}
+unique(stock_tidy2$company)
+```

@@ -1,0 +1,64 @@
+---
+title: "Coding challanges for Session One"
+subtitle: ""
+author: "Akos Mate"
+date: '2020 July'
+output:
+    html_document:
+        code_folding: "show"
+        number_sections: FALSE
+        toc: true
+        toc_depth: 4
+        toc_float: true
+        theme: flatly
+        highlight: tango
+        df_print: paged
+        css: ../rmd_style.css
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      collapse = TRUE,
+                      comment = "#>",
+                      message = FALSE,
+                      warning = FALSE
+)
+```
+
+In this document you'll find some excercises that you can practice your newly acquired R knowledge. The solutions can be accessed if you check the `.rmd` source file. (you really should try solving them alone) 
+
+
+If you have any problems or questions regarding the excercises we can go over them in the class. My advice: don't be afraid to break things, try multiple approaches and think of it as the beggining of the journey. If something is hard at first try, don't fixate on it, move on and then return to the problem later.
+
+
+# Excercise 1 - using logical values
+
+> We want to know the proportion of values in the vector `num` that are above the value of `8`. Use the functions that we have already discussed in the session to calculate this.
+
+```{r}
+num <- c(5, 10, 15, 20)
+```
+
+
+The solution looks like this:
+```{r echo=FALSE}
+(sum(num > 8))/length(num)
+```
+
+
+# Excercise 2 - creating data frames
+> Reproduce the `df` dataframe. Hint: create each variable, then put them together into the data frame object. Pay attention to match the variable types as well (country is character, continent is factor)!
+
+```{r echo=FALSE}
+country <- c("Thailand", "Norway", "North Korea", "Canada", "Slovenia", "France", "Venezuela")
+pop <- c(68.7, 5.2, 24, 47.8, 2, 63.6, 31.6)
+continent <- factor(c("Asia", "Europe", "Asia", "North America", "Europe", "Europe", "South America"), levels = c("Asia", "Europe", "North America", "South America"))
+
+df <- data.frame(country, pop, continent, stringsAsFactors = FALSE)
+```
+
+The dataframe to be reproduced: (you can give it any name you like)
+```{r}
+df
+```

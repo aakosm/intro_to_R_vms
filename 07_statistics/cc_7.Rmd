@@ -1,0 +1,73 @@
+---
+title: "Coding challanges for Session Seven"
+subtitle: ""
+author: "Akos Mate"
+date: '2020 July'
+output:
+    html_document:
+        code_folding: "show"
+        number_sections: FALSE
+        toc: true
+        toc_depth: 4
+        toc_float: true
+        theme: flatly
+        highlight: tango
+        df_print: paged
+        css: ../rmd_style.css
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      collapse = TRUE,
+                      comment = "#>",
+                      message = FALSE,
+                      warning = FALSE
+)
+```
+
+
+```{r echo=FALSE}
+
+library(tidyverse)
+library(gapminder)
+
+```
+
+## t-test
+> Load the palmerspenguins dataset and see if the difference between the bill lenght between the Adelie and Chinstrap are statistically significant or not. Tip: use the previously learned filter() function from dplyr to prep the data. You should get something similar as below. You can turn the scientific notation off with `options(scipen = 999)`.
+
+```{r echo=FALSE}
+penguins_t_prep <- palmerpenguins::penguins %>% 
+    filter(species == c("Adelie", "Chinstrap"))
+
+penguins_t <- t.test(bill_length_mm ~ species, data = penguins_t_prep)
+
+options(scipen = 999)
+
+penguins_t
+```
+
+
+
+# regression
+> Using the `gapminder` dataset, filter our observations to the year of 2007 and see what are the effects of the GDP per capita, population and continent on the life expectancy. 
+
+The result should be something like this. How would you interpret this?
+
+```{r echo=FALSE}
+data(gapminder)
+
+options(scipen = 5)
+
+gap_prep <- gapminder %>% 
+    filter(year == 2007)
+
+reg_gap <- lm(lifeExp ~ gdpPercap + pop + continent,
+          data = gap_prep)
+```
+
+```{r}
+
+summary(reg_gap)
+```

@@ -1,0 +1,111 @@
+---
+title: "Coding challanges for Session Five"
+subtitle: ""
+author: "Akos Mate"
+date: '2020 July'
+output:
+    html_document:
+        code_folding: "show"
+        number_sections: FALSE
+        toc: true
+        toc_depth: 4
+        toc_float: true
+        theme: flatly
+        highlight: tango
+        df_print: paged
+        css: ../rmd_style.css
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      collapse = TRUE,
+                      comment = "#>",
+                      message = FALSE,
+                      warning = FALSE
+)
+```
+
+
+```{r echo=FALSE}
+
+library(tidyverse)
+
+```
+
+
+We are using some new datasets for practice. If you are interested in various datasets for practice or personal pet projects, a good starting point is the [Tidy Tuesday](https://github.com/rfordatascience/tidytuesday) GitHub repo where they post a new dataset each week.
+
+
+# Excercise 1 - Practicing `ggplot`
+
+> Using the 'squads' data, create a scatterplot where the number of caps (international games played) is depicted along the X-axis, goals (international goals scored) is visualized at the Y-axis. Let's add colors based on the footballer's position.
+
+More info on the dataset: https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-07-09
+
+```{r}
+squads <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-07-09/squads.csv")
+```
+
+
+
+```{r echo=FALSE}
+library(ggplot2)
+
+ggplot(data = squads,
+       aes(x = caps,
+           y = goals,
+           color = pos)) +
+  geom_point()
+
+```
+
+
+
+
+> Now, overlay multiple histograms on each other -- use fill = variable to have a histogram of goals with players of different position depicted with different colors. You might want to trim (set the limits of) the x-axis at 75 goals, as very few players score more than that. 
+
+```{r echo=FALSE}
+ggplot(data = squads,
+       mapping = aes(x = goals,
+                     fill = pos)) +
+  xlim(0, 75) +
+  geom_histogram(binwidth = 1, position = "identity", alpha = 0.65)
+
+```
+
+> Create a histogram of caps (international games played), fill the bars with grey color, and overlap it with a density plot, filled with the color 'salmon'! 
+
+```{r echo=FALSE}
+ggplot(squads,
+       mapping = aes(x = caps)) +
+  geom_histogram(aes(y = ..density..),
+                 binwidth = 1,
+                 fill = "grey",
+                 color = "black") +
+  xlim(0, 200) +
+  geom_density(alpha = 0.25, fill = "salmon")
+```
+
+
+
+Now we use the other part of the World Cup data.
+
+```{r}
+wwc_outcomes <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-07-09/wwc_outcomes.csv")
+```
+
+> Create a joyplot of *scores* using the wwc_outcomes data, using the result (i.e. whether the team won, lost or tied) as a grouping variable! 
+
+```{r}
+library(ggridges)
+```
+
+```{r echo=FALSE}
+ggplot(data = wwc_outcomes,
+       mapping = aes(x = score,
+                     y = win_status,
+                     fill = win_status)) +
+  geom_density_ridges(scale = 0.8, alpha = 0.5)
+```
+

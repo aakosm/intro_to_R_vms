@@ -1,0 +1,118 @@
+---
+title: "Coding challanges for Session Six"
+subtitle: ""
+author: "Akos Mate"
+date: '2020 July'
+output:
+    html_document:
+        code_folding: "show"
+        number_sections: FALSE
+        toc: true
+        toc_depth: 4
+        toc_float: true
+        theme: flatly
+        highlight: tango
+        df_print: paged
+        css: ../rmd_style.css
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      collapse = TRUE,
+                      comment = "#>",
+                      message = FALSE,
+                      warning = FALSE
+)
+```
+
+
+```{r echo=FALSE, warning=FALSE}
+
+library(tidyverse)
+
+```
+
+# Excercise 1 -  Loops
+> Excercise: recode gapminder gdp variable to below and above average dummy with a loop.
+> Check the result of the loop!
+
+```{r}
+library(gapminder)
+
+gapminder_df <- gapminder
+```
+
+
+```{r echo=FALSE}
+gapminder_df$gdp <- NA
+gdp_mean <- mean(gapminder_df$gdpPercap, na.rm = TRUE)
+
+for (i in 1:nrow(gapminder_df)) {
+    gdp_test <- gapminder_df$gdpPercap[i] > gdp_mean
+    
+    if (gdp_test) {
+        gapminder_df$gdp[i] <- "above"
+    } else {
+        gapminder_df$gdp[i] <- "below"
+    }
+}
+
+```
+
+```{r}
+table(gapminder_df$gdp)
+```
+
+
+# Excercise 2 - Writing functions
+> Write a function called `z_score`, which standardizes (creates z scores from raw scores) an input vector. The formula for the standardization is: $z=\frac{x-\bar{x}}{S}$  
+> where, $x$ is the raw score (numeric value in our input vector) in our sample; $\bar{x}$ is the sample mean; and $S$ is the sample standard deviation.  
+
+
+```{r echo=FALSE}
+z_score <- function(x, sample) {
+    
+    output <- (x-mean(sample, na.rm = TRUE))/sd(sample, na.rm = TRUE)
+    
+    return(output)
+}
+
+```
+
+Check our function with some random, normally distributed data, and standardize the first 5 value.
+
+```{r}
+height <- rnorm(50, 0, 1)
+
+z_score(height[1:5], height)
+```
+
+
+
+# Excercise 3 - `apply` function
+> Select the numerical variables of the `msleep` data and put into a new dataframe called `msleep_num` (explore the `select_if` function!)
+
+```{r}
+library(dplyr)
+msleep_df <- msleep
+```
+
+
+```{r echo=FALSE}
+msleep_num <- msleep %>% 
+  select_if(is.numeric)
+```
+
+```{r}
+glimpse(msleep_num)
+```
+
+> Calculate the column means of the msleep_num data frame. Use the `apply()` function!  
+> you should get something similar:  
+
+
+```{r echo=FALSE}
+apply(msleep_num, 2, function(x) mean(x, na.rm = TRUE))
+
+```

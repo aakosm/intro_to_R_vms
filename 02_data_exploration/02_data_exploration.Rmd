@@ -2,7 +2,7 @@
 title: "Importing and Exploring Data in R"
 subtitle: "Session Two"
 author: "Akos Mate"
-date: '2020 July'
+date: '2021 March'
 output:
     html_document:
         code_folding: "show"
@@ -16,10 +16,11 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,
-                      collapse = TRUE,
-                      comment = "#>",
-                      message = FALSE
+knitr::opts_chunk$set(
+  echo = TRUE,
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE
 )
 ```
 
@@ -72,7 +73,6 @@ library(readxl) # importing Excel tables into R
 library(gapminder) # data we will use
 library(dplyr) # data manipulation package
 library(ggplot2) # data visulization package
-
 ```
 
 **Important note:** whenever there is a conflicting function name (e.g: two packages have the same function name) you can specify what function you want to use with the `package::function` syntax. Below, when loading in the data, I use `readr::read_csv` to signify which package the function comes from.
@@ -89,7 +89,6 @@ It is possible to **load your data by downloading it using the url** of the data
 
 ```{r, eval = FALSE}
 qog_text <- readr::read_csv("http://www.qogdata.pol.gu.se/data/qog_bas_cs_jan20.csv")
-
 ```
 
 
@@ -126,7 +125,6 @@ qog_stata <- haven::read_stata("data/qog_bas_cs_jan20.dta")
 
 # read the SPSS .sav file
 qog_spss <- haven::read_spss("data/qog_bas_cs_jan20.sav")
-
 ```
 
 
@@ -210,7 +208,6 @@ head(gapminder_df)
 
 # let's check the end of our data
 tail(gapminder_df)
-
 ```
 
 If you are interested only a certain number of observations and columns, you can specify that as well with the `head` function or by indexing your data frame.
@@ -245,7 +242,6 @@ Now that we know we imported our data properly and have some sense of its dimens
 For starters, use `summary()` to check some basic descriptives of our variables.
 ```{r}
 summary(gapminder_df)
-
 ```
 
 
@@ -284,7 +280,6 @@ In our first step, we
 ```{r echo=FALSE, fig.cap="source: VanderPlas, Jake. Python data science handbook: Essential tools for working with data. " O'Reilly Media, Inc.", 2016 (ch3)}
 
 knitr::include_graphics("figures/split-apply-combine.png")
-
 ```
 
 
@@ -294,8 +289,8 @@ Check the code snippet below to see the role of each line.
 ```{r}
 # let's see the GDP by continents
 gdp_cont <- gapminder_df %>% # we will use the gapminder data
-    dplyr::group_by(continent) %>% # then group the data by continent
-    dplyr::summarise(mean_gdp = mean(gdpPercap), n_obs = n()) # then create a `mean_gdp` variable where we compute the mean of the grouped gdpPercap variable.
+  dplyr::group_by(continent) %>% # then group the data by continent
+  dplyr::summarise(mean_gdp = mean(gdpPercap), n_obs = n()) # then create a `mean_gdp` variable where we compute the mean of the grouped gdpPercap variable.
 
 # let's see the result.
 gdp_cont
@@ -307,10 +302,9 @@ gdp_cont
 
 solution should look like this:
 ```{r echo=FALSE}
-gapminder_df %>% 
-    group_by(continent) %>% 
-    summarise(n = n(), mean = mean(lifeExp), maximum = max(lifeExp), minimum = min(lifeExp))
-
+gapminder_df %>%
+  group_by(continent) %>%
+  summarise(n = n(), mean = mean(lifeExp), maximum = max(lifeExp), minimum = min(lifeExp))
 ```
 
 
@@ -340,17 +334,20 @@ To have some idea about our variables, lets plot them on a histogram. First, we 
 Let's create the foundation of our plot by specifying for `ggplot` the data we use and the variable we want to plot.
 
 ```{r}
-ggplot(data = gapminder_df,
-       mapping = aes(x = gdpPercap))
-
+ggplot(
+  data = gapminder_df,
+  mapping = aes(x = gdpPercap)
+)
 ```
 
 
 We need to specify what sort of shape we want our data to be displayed. We can do this by adding the `geom_histogram()` function with a `+`
 
 ```{r}
-ggplot(data = gapminder_df,
-       mapping = aes(x = gdpPercap)) +
+ggplot(
+  data = gapminder_df,
+  mapping = aes(x = gdpPercap)
+) +
   geom_histogram()
 ```
 
@@ -358,8 +355,10 @@ ggplot(data = gapminder_df,
 Looks a little bit skewed. Let's log transform our variable with the `scale_x_log10()` function.
 
 ```{r, message=TRUE}
-ggplot(data = gapminder_df,
-       mapping = aes(x = gdpPercap)) +
+ggplot(
+  data = gapminder_df,
+  mapping = aes(x = gdpPercap)
+) +
   geom_histogram() +
   scale_x_log10()
 ```
@@ -367,8 +366,10 @@ ggplot(data = gapminder_df,
 As the message says, we can mess around with the binwidth argument, so let's do that.
 
 ```{r}
-ggplot(data = gapminder_df,
-       mapping = aes(x = gdpPercap)) +
+ggplot(
+  data = gapminder_df,
+  mapping = aes(x = gdpPercap)
+) +
   geom_histogram(binwidth = 0.05) +
   scale_x_log10()
 ```
@@ -377,9 +378,13 @@ ggplot(data = gapminder_df,
 Of course if one prefers a boxplot, that is possible as well. We will check how life expectancy varies between and within continents. We'll use `geom_boxplot()`. In this approach, we create an object for our plot. You don't need to do this (there are instances where it is useful), but this shows you that just about everything can be an object in R
 
 ```{r}
-p_box <- ggplot(data = gapminder_df,
-                mapping = aes(x = continent,
-                              y = lifeExp)) +
+p_box <- ggplot(
+  data = gapminder_df,
+  mapping = aes(
+    x = continent,
+    y = lifeExp
+  )
+) +
   geom_boxplot()
 
 p_box
@@ -401,11 +406,8 @@ knitr::include_graphics("figures/EDA-boxplot.png")
 Let's use the gapminder dataset we have loaded and investigate the life expectancy and gdp per capita variables. We'll use the `geom_point()` function.
 
 ```{r}
-ggplot(data = gapminder_df,
-       mapping = aes(x = gdpPercap,
-                     y = lifeExp)) +
+ggplot(data = gapminder_df, mapping = aes(x = gdpPercap, y = lifeExp)) +
   geom_point()
-
 ```
 
 Let's refine this plot slightly:
@@ -419,32 +421,31 @@ Let's refine this plot slightly:
 Check the comments in the code snippet to see what each line does!
 
 ```{r}
-ggplot(data = gapminder_df,
-       mapping = aes(x = gdpPercap,
-                     y = lifeExp)) +
+ggplot(data = gapminder_df, mapping = aes(x = gdpPercap, y = lifeExp)) +
   geom_point(alpha = 0.25) + # inside the geom_ we can modify its attributes. Here we set the transparency levels of the points
   scale_x_log10() + # rescale our x axis
-  labs(x = "GDP per capita", # add captions and axis titles
-       y = "Life expectancy",
-       title = "Connection between GDP and Life expectancy",
-       subtitle = "Points are country-years",
-       caption = "Source: Gapminder")
+  labs(
+    x = "GDP per capita", # add captions and axis titles
+    y = "Life expectancy",
+    title = "Connection between GDP and Life expectancy",
+    subtitle = "Points are country-years",
+    caption = "Source: Gapminder"
+  )
 ```
 
 So far so good. With some minor additions the plot looks all right. But what if we want to see how each continent fares in this relationship? We need to change the `p1` object to include a new argument in the mapping function: `color = variable`. Now it is clear that European countries (country-years) are clustered in the high-GDP/high life longevity upper right corner.
 
 ```{r}
-ggplot(data = gapminder_df,
-       mapping = aes(x = gdpPercap,
-                     y = lifeExp,
-                     color = continent)) + # this is where we specify that we want to color the data by continents.
+ggplot(data = gapminder_df, mapping = aes(x = gdpPercap, y = lifeExp, color = continent)) + # this is where we specify that we want to color the data by continents.
   geom_point(alpha = 0.75) +
   scale_x_log10() + # rescale our x axis
-  labs(x = "GDP per capita (log $)", 
-       y = "Life expectancy",
-       title = "Connection between GDP and Life expectancy",
-       subtitle = "Points are country-years",
-       caption = "Source: Gapminder dataset")
+  labs(
+    x = "GDP per capita (log $)",
+    y = "Life expectancy",
+    title = "Connection between GDP and Life expectancy",
+    subtitle = "Points are country-years",
+    caption = "Source: Gapminder dataset"
+  )
 ```
 
 
@@ -458,29 +459,22 @@ ggsave("gapminder_scatter.png", dpi = 600)
 We can see how life expectancy changed in Mexico, Afghanistan, Sudan and Slovenia by using the `geom_line()` geom. For this, we create a new dataset by subsetting the gapminder one. The `%in%` operator does the same thing as the `==` but for multiple values. For subsetting we use the `dplyr::filter()` function. Don't worry if this sounds too much, we will spend a whole session on how to subset and clean our data.
 
 ```{r}
-#subset the dataset to have our selected countries.
-comp_df <- gapminder_df %>% 
-    filter(country %in% c("Mexico", "Afghanistan", "Sudan", "Slovenia"))
+# subset the dataset to have our selected countries.
+comp_df <- gapminder_df %>%
+  filter(country %in% c("Mexico", "Afghanistan", "Sudan", "Slovenia"))
 
 # create the ggplot object with the data and mapping info
-ggplot(data = comp_df,
-                  mapping = aes(x = year,
-                                y = lifeExp,
-                                color = country)) +
+ggplot(data = comp_df, mapping = aes(x = year, y = lifeExp, color = country)) +
   geom_line(aes(group = country)) # we need to tell ggplot that we want to group our lines by countries
-
 ```
 
 
 `ggplot2` makes it easy to create individual subplots for each category by "faceting" our data. Let's plot the growth in life expectancy over time on each continent. We use the `geom_line()` function to draw a line and we tell ggplot to facet by adding the `facet_wrap(~ variable)` function.
 
 ```{r}
-ggplot(data = gapminder_df,
-                  mapping = aes(x = year,
-                                y = lifeExp)) +
+ggplot(data = gapminder_df, mapping = aes(x = year, y = lifeExp)) +
   geom_line(aes(group = country)) + # we need to tell ggplot that we want to group our lines by countries
-  facet_wrap(~ continent) # create a small graph for each continent
-
+  facet_wrap(~continent) # create a small graph for each continent
 ```
 
 
@@ -504,7 +498,7 @@ hist(gapminder_df$gdpPercap, breaks = 30)
 ```
 
 ```{r}
-options(scipen=5)
+options(scipen = 5)
 
 # you can also control the breakpoints beyond giving it a simple value.
 hist(gapminder_df$gdpPercap, breaks = seq(0, 120000, 1500))
@@ -512,10 +506,11 @@ hist(gapminder_df$gdpPercap, breaks = seq(0, 120000, 1500))
 
 ```{r echo=FALSE}
 hist(gapminder_df$lifeExp,
-     breaks = seq(20, 90, 5),
-     ylim = c(0,350),
-     main = "Distribution of life expectancy",
-     xlab = "Years")
+  breaks = seq(20, 90, 5),
+  ylim = c(0, 350),
+  main = "Distribution of life expectancy",
+  xlab = "Years"
+)
 ```
 
 
@@ -534,7 +529,7 @@ For continuous data, we can use the generic `plot()` function.
 
 mexico <- subset(gapminder_df, country == "Mexico")
 
-# the first argument of the plot is the x axis, second is the y axis. 
+# the first argument of the plot is the x axis, second is the y axis.
 plot(mexico$year, mexico$lifeExp)
 ```
 
@@ -546,29 +541,31 @@ Something is not quite right...
 
 # We should add `type`. Also we can structure our function to be a bit more readable.
 
-plot(mexico$year, mexico$lifeExp, 
-     xlab = "Year", 
-     ylab = "Life expectancy (Years)",
-     col = "orange",
-     type = "l")
+plot(mexico$year, mexico$lifeExp,
+  xlab = "Year",
+  ylab = "Life expectancy (Years)",
+  col = "orange",
+  type = "l"
+)
 ```
 
 
 
 ```{r}
 plot(log(gapminder_df$gdpPercap),
-     gapminder_df$lifeExp,
-     xlab = "Log GDP per capita",
-     ylab = "Life expectancy",
-     main = "Relationship between GDP and life expectancy",
-     type = "p")
+  gapminder_df$lifeExp,
+  xlab = "Log GDP per capita",
+  ylab = "Life expectancy",
+  main = "Relationship between GDP and life expectancy",
+  type = "p"
+)
 ```
 
 
 To see how each variable is associated with the other, we can use the `pair()` function. It will create a scatter plot matrix, where the variable name is on the diagonal. In the rows the vertical axis is the variable indicated in the diagonal and in the columns the horizontal axis is the variable indicated in the diagonal.
 
 ```{r}
-pairs(gapminder_df[,c("lifeExp", "pop", "gdpPercap")])
+pairs(gapminder_df[, c("lifeExp", "pop", "gdpPercap")])
 ```
 
 We can make the plots a little nicer, by adjusting the points. (this can be done for the previous scatterplots as well!). `pch = 19` selects a point type which is filled, then with `col = rgb()` we can specify the exact color that we are looking for. The `alpha` argument regulates the transparency of the points.
@@ -580,9 +577,10 @@ knitr::include_graphics("figures/pch-values.png")
 *source: [http://kktg.net/sgr/wp-content/uploads/2014/02/fig-15-3-pch-values.png](http://kktg.net/sgr/wp-content/uploads/2014/02/fig-15-3-pch-values.png)*
 
 ```{r}
-pairs(gapminder_df[,c("lifeExp", "pop", "gdpPercap")],
-      pch=19, 
-      col=rgb(0,0,0, alpha=0.1))
+pairs(gapminder_df[, c("lifeExp", "pop", "gdpPercap")],
+  pch = 19,
+  col = rgb(0, 0, 0, alpha = 0.1)
+)
 ```
 
 
@@ -591,10 +589,12 @@ The formula for the boxplot is instructing R to create a boxplot for each contin
 
 
 ```{r}
-boxplot(lifeExp ~ continent, data = gapminder_df,
-        main = "Distribution of life expectancy by continent",
-        xlab = "Continents",
-        ylab = "Life expectancy")
+boxplot(lifeExp ~ continent,
+  data = gapminder_df,
+  main = "Distribution of life expectancy by continent",
+  xlab = "Continents",
+  ylab = "Life expectancy"
+)
 ```
 
   
@@ -615,18 +615,15 @@ sw_table
 
 # plot the grouped barplot. Mind the `beside` argument! We can also add a legend, so the colors are straightforward.
 barplot(sw_table,
-        beside = TRUE,
-        col = c("orange", "brown", "green", "black"))
-legend(x = "topright",
-       legend = c("Female", "Hermaphrodite", "Male", "None"),
-       fill = c("orange", "brown", "green", "black"),
-       cex = 0.7)
+  beside = TRUE,
+  col = c("orange", "brown", "green", "black")
+)
+legend(
+  x = "topright",
+  legend = c("Female", "Hermaphrodite", "Male", "None"),
+  fill = c("orange", "brown", "green", "black"),
+  cex = 0.7
+)
 ```
 
 If you want to have the proportional numbers, we can use the `prop.table()` function. If we use the sw_table table as the only argument, the we will get proportions of the total. If we use 1 as the second argument, we get proportions of rows and if we use 2, we get proportions of columns. Remember, rows come first and columns second!
-
-
-
-
-
-

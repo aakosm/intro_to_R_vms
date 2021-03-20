@@ -2,7 +2,7 @@
 title: "Transforming and wrangling data 2/2"
 author: "Akos Mate"
 subtitle: "Session Four"
-date: '2020 July'
+date: '2021 March'
 output:
     html_document:
         code_folding: "show"
@@ -25,7 +25,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 
 > Main packages used: `dplyr`   
-> Main functions covered: `dplyr::filter()`, `dplyr::select()`, `dplyr::mutate()`, `dplyr::*_join()`, `is.na()`, `tidyr::drop_na()`
+> Main functions covered: `dplyr::filter()`, `dplyr::select()`, `dplyr::mutate()`, `dplyr::*_join()`, ``, `is.na()`, `tidyr::drop_na()`
 
 
 > **Supplementary resources:**
@@ -70,6 +70,7 @@ gapminder_df %>%
 ```
 
 We could also use the `x %in% y` expression which will filter every row where x matches one of the values of y. With this we can filter for two countries in our data.
+
 ```{r}
 gapminder_df %>% 
     filter(country %in% c("Sweden", "Norway"))
@@ -252,15 +253,41 @@ gapminder_df %>%
 
 
 
-Use the `transmute()` function if you only need the new variables.
+Finally, there are two very useful functions for recoding variables. `if_else()` from `dplyr` (the base R function which is basically the same is `ifelse()`). The logic of the function is the same as the one found in Excel: `if_else(condition, value_if_true, value_if_false)`. As a quick exercise, we are going to create a new variable and use `if_else` to see if a country is below or above the average GDP per capita from the sample.
 
 ```{r}
-gdp <- gapminder_df %>% 
-    transmute(gdp = gdpPercap * pop)
-
-
-head(gdp, 5)
+gapminder_df %>% 
+    select(country, year, gdpPercap) %>% 
+    mutate(gdp_position = if_else(gdpPercap > mean(gdpPercap), "above", "below"))
 ```
+
+If we would need more categories (say, higher income, middle income, lower income) one way would be nesting these conditional functions but nested ifelse gets ugly really fast. Rather, we should use the `case_when` function which is a way better solution for this. The `case_when` can assign values based on multiple conditions relating to a given variable. To get a more visual result, let's restrict the year to 1992 with the `filter()` function.
+
+To make an informed decision, let's see the distribution for the GDP per capita.
+
+```{r}
+gapminder_df %>% 
+    filter(year == 1992) %>% 
+    select(gdpPercap) %>% 
+    summary()
+```
+Now we can set up our new `country_type` variable using `case_when`. The syntax of the function is the conditional value comes after the condition and a `~` and the various conditions are then separated with a comma.
+
+```{r}
+gapminder_df %>% 
+    filter(year == 1992) %>% 
+    select(country, year, gdpPercap) %>% 
+    mutate(
+        country_type = case_when(gdpPercap < 1270 ~ "lower_income",
+                                 gdpPercap > 1270 & gdpPercap < 8100 ~ "middle_income",
+                                 gdpPercap > 8100 ~ "higher_income" )
+        )
+    
+    
+```
+
+
+
 
 
 

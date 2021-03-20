@@ -2,7 +2,7 @@
 title: "Data visualisation with `ggplot2`"
 author: "Akos Mate"
 subtitle: "Session Five"
-date: '2020 July'
+date: '2021 March'
 output:
     html_document:
         code_folding: "show"
@@ -16,10 +16,12 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,
-                      collapse = TRUE,
-                      comment = "#>",
-                      message = FALSE
+knitr::opts_chunk$set(
+  echo = TRUE,
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE,
+  fig.align = "center"
 )
 ```
 
@@ -143,8 +145,8 @@ ggplot(data = penguins_df)
 Second, we **decide on the dimensions of our data**. Let's start by specifying what to plot on the y and x axes. This is done within the `aes()` argument, which stands for 'aesthetic'.
 ```{r}
 ggplot(data = penguins_df,
-       aes(x = body_mass_g,
-           y = flipper_length_mm))
+       mapping = aes(x = body_mass_g,
+                     y = flipper_length_mm))
   
 ```
 
@@ -154,8 +156,8 @@ ggplot(data = penguins_df,
 Third, we **add our wanted representation** of the data, with the `geom_` function family. 
 ```{r}
 ggplot(data = penguins_df,
-       aes(x = body_mass_g,
-           y = flipper_length_mm)) +
+       mapping = aes(x = body_mass_g,
+                     y = flipper_length_mm)) +
   geom_point()
 ```
 
@@ -165,9 +167,9 @@ ggplot(data = penguins_df,
 Fourth, we can **add further dimension** to our plot by extending the `aes()` arguments. Let's add colors based on the species variable.
 ```{r}
 ggplot(data = penguins_df,
-       aes(x = body_mass_g,
-           y = flipper_length_mm,
-           color = species)) +
+       mapping = aes(x = body_mass_g,
+                     y = flipper_length_mm,
+                     color = species)) +
   geom_point()
 ```
 
@@ -176,9 +178,9 @@ ggplot(data = penguins_df,
 Fifth, each **aesthetic can be rescaled**. Now we want to rescale our colors. We will use the manual color scale to specify each value. Colors can be added as HEX code, or names.
 ```{r}
 ggplot(data = penguins_df,
-       aes(x = body_mass_g,
-           y = flipper_length_mm,
-           color = species)) +
+       mapping = aes(x = body_mass_g,
+                     y = flipper_length_mm,
+                     color = species)) +
   geom_point() +
   scale_color_manual(values = c("#7fc97f", "blue", "#fdc086"))
 ```
@@ -189,17 +191,19 @@ ggplot(data = penguins_df,
 Sixth, we can modify the **textual elements** of our plot. To do this, we can assign a string to every text element with the `labs` function. As we see the color aesthetic created automatically a legend on the side. We can remove the title of it should we want it.
 ```{r}
 ggplot(data = penguins_df,
-       aes(x = body_mass_g,
-           y = flipper_length_mm,
-           color = species)) +
+       mapping = aes(x = body_mass_g,
+                     y = flipper_length_mm,
+                     color = species)) +
   geom_point() +
   scale_color_manual(values = c("#7fc97f", "blue", "#fdc086")) +
-  labs(title = "Penguins, their mass and their flippers",
-       subtitle = "The positive relationship between body mass and flipper size",
-       caption = "Data: Gorman, Williams & Fraser (2014)",
-       x = "Body mass (g)",
-       y = "Flipper length (mm)",
-       color = "")
+  labs(
+    title = "Penguins, their mass and their flippers",
+    subtitle = "The positive relationship between body mass and flipper size",
+    caption = "Data: Gorman, Williams & Fraser (2014)",
+    x = "Body mass (g)",
+    y = "Flipper length (mm)",
+    color = ""
+    )
 
 ```
 
@@ -209,17 +213,19 @@ ggplot(data = penguins_df,
 Finally, we decide on the **theme** of our hearts. `ggplot2` offers an ocean of customization options for our plot, there are some pre-made themes but we can create our own as well. Now we will stick to `theme_minimal()`.
 ```{r}
 ggplot(data = penguins_df,
-       aes(x = body_mass_g,
-           y = flipper_length_mm,
-           color = species)) +
+       mapping = aes(x = body_mass_g,
+                     y = flipper_length_mm,
+                     color = species)) +
   geom_point() +
   scale_color_manual(values = c("#7fc97f", "blue", "#fdc086")) +
- labs(title = "Penguins, their mass and their flippers",
-       subtitle = "The positive relationship between body mass and flipper size",
-       caption = "Data: Gorman, Williams & Fraser (2014)",
-       x = "Body mass (g)",
-       y = "Flipper length (mm)",
-       color = "") +
+ labs(
+   title = "Penguins, their mass and their flippers",
+   subtitle = "The positive relationship between body mass and flipper size",
+   caption = "Data: Gorman, Williams & Fraser (2014)",
+   x = "Body mass (g)",
+   y = "Flipper length (mm)",
+   color = ""
+   ) +
   theme_minimal()
 ```
 
@@ -231,25 +237,27 @@ We use scatter plot to illustrate some association between two continuous variab
 Now, we want to know what is the association between the GDP per capita and life expectancy
 
 ```{r}
-ggplot(gapminder_df,
-             mapping = aes(x = gdpPercap,
-                           y = lifeExp)) +
-    geom_point()
+ggplot(data = gapminder_df,
+       mapping = aes(x = gdpPercap,
+                     y = lifeExp)) +
+  geom_point()
 ```
 
 Now that we have a basic figure, let's make it better. We transform the x axis values with the `scale_x_log10()` and add text to our plot with the `labs()` function. Within `geom_point()` we can also specify geom specific options, such as the alpha level (transparency).
 
 ```{r}
 ggplot(data = gapminder_df,
-             mapping = aes(x = gdpPercap,
-                           y = lifeExp)) +
+       mapping = aes(x = gdpPercap,
+                     y = lifeExp)) +
     geom_point(alpha = 0.25) + # inside the geom_ we can modify its attributes. Here we set the transparency levels of the points
     scale_x_log10() + # rescale our x axis
-    labs(x = "GDP per capita", 
-         y = "Life expectancy",
-         title = "Connection between GDP and Life expectancy",
-         subtitle = "Points are country-years",
-         caption = "Source: Gapminder")
+    labs(
+      x = "GDP per capita", 
+      y = "Life expectancy",
+      title = "Connection between GDP and Life expectancy",
+      subtitle = "Points are country-years",
+      caption = "Source: Gapminder"
+      )
 ```
 
 
@@ -259,16 +267,18 @@ To add some analytical power to our plot we can use `geom_smooth()` and choose a
 
 ```{r}
 ggplot(data = gapminder_df,
-             mapping = aes(x = gdpPercap,
-                           y = lifeExp)) +
+       mapping = aes(x = gdpPercap,
+                     y = lifeExp)) +
     geom_point(alpha = 0.25) + 
     geom_smooth(method = "lm", se = TRUE, color = "orange") + # adding the regressiom line
     scale_x_log10() +
-    labs(x = "GDP per capita", 
-         y = "Life expectancy",
-         title = "Connection between GDP and Life expectancy",
-         subtitle = "Points are country-years",
-         caption = "Source: Gapminder")
+    labs(
+      x = "GDP per capita", 
+      y = "Life expectancy",
+      title = "Connection between GDP and Life expectancy",
+      subtitle = "Points are country-years",
+      caption = "Source: Gapminder"
+      )
 
 
 ```
@@ -277,16 +287,18 @@ what if we want to see how each continent fares in this relationship? We need to
 
 ```{r}
 ggplot(data = gapminder_df,
-             mapping = aes(x = gdpPercap,
-                           y = lifeExp,
-                           color = continent)) + # color by category
+       mapping = aes(x = gdpPercap,
+                     y = lifeExp,
+                     color = continent)) + # color by category
     geom_point(alpha = 0.5) + 
     scale_x_log10() + # rescale our x axis
-    labs(x = "GDP per capita", 
-         y = "Life expectancy",
-         title = "Connection between GDP and Life expectancy",
-         subtitle = "Points are country-years",
-         caption = "Source: Gapminder")
+    labs(
+      x = "GDP per capita", 
+      y = "Life expectancy",
+      title = "Connection between GDP and Life expectancy",
+      subtitle = "Points are country-years",
+      caption = "Source: Gapminder"
+      )
     
 ```
 
@@ -296,19 +308,20 @@ We add horizontal line or vertical line to our plot, if we have a particular cut
 
 ```{r}
 ggplot(data = gapminder_df,
-             mapping = aes(x = gdpPercap,
-                           y = lifeExp,
-                           color = continent)) + # color by category
+       mapping = aes(x = gdpPercap,
+                     y = lifeExp,
+                     color = continent)) + # color by category
     geom_point(alpha = 0.5) + 
     scale_x_log10() +
     geom_vline(xintercept = 3500) + # adding vertical line 
     geom_hline(yintercept = 70, linetype = "dashed", color = "black", size = 1) + # adding horizontal line
-    
-    labs(x = "GDP per capita", 
-         y = "Life expectancy",
-         title = "Connection between GDP and Life expectancy",
-         subtitle = "Points are country-years",
-         caption = "Source: Gapminder")
+    labs(
+      x = "GDP per capita", 
+      y = "Life expectancy",
+      title = "Connection between GDP and Life expectancy",
+      subtitle = "Points are country-years",
+      caption = "Source: Gapminder"
+      )
 
 ```
 
@@ -319,17 +332,15 @@ ggplot(data = gapminder_df,
 Using histograms to check the distribution of the data as we have seen in the intro sessions.
 
 ```{r}
-ggplot(gapminder_df,
-       mapping = aes(x = lifeExp)) +
-    geom_histogram() 
+ggplot(gapminder_df, aes(x = lifeExp)) +
+  geom_histogram() 
 ```
 
 
 To add some flair to our figure, we use `color` and `fill` inside the `geom_` call. What is the difference between the two?
 ```{r}
-ggplot(gapminder_df,
-       mapping = aes(x = lifeExp)) +
-    geom_histogram(binwidth = 1, color = "black", fill = "orange") # we can set the colors and border of the bars and set the binwidth or bins 
+ggplot(gapminder_df, aes(x = lifeExp)) +
+  geom_histogram(binwidth = 1, color = "black", fill = "orange") # we can set the colors and border of the bars and set the binwidth or bins 
 ```
 
 
@@ -339,38 +350,30 @@ ggplot(gapminder_df,
 A variation on histograms is called density plots that uses Kernel smoothing (fancy! but in reality is a smoothing function which uses the weighted averages of neighboring data points.)
 
 ```{r}
-ggplot(penguins_df,
-       mapping = aes(x = body_mass_g)) +
-    geom_density()
+ggplot(penguins_df, aes(x = body_mass_g)) +
+  geom_density()
 ```
 
 Add some fill
 ```{r}
-ggplot(penguins_df,
-       mapping = aes(x = body_mass_g)) +
-    geom_density(fill = "orange", alpha = 0.3)
+ggplot(penguins_df, aes(x = body_mass_g)) +
+  geom_density(fill = "orange", alpha = 0.3)
 ```
 
 Your intuition is correct, we can overlap this with our histogram. To keep the `y` axis consistent between the histogram and the density plot, we use the `..density..` term for the `geom_histogram` to avoid having the frequency on the `y` axis.
 
 ```{r}
-ggplot(penguins_df,
-       mapping = aes(x = body_mass_g)) +
-    geom_histogram(aes(y = ..density..),
-                   binwidth = 100,
-                   fill = "white",
-                   color = "black") +# we add this so the y axis is density instead of count.
-    geom_density(alpha = 0.25, fill = "orange")
+ggplot(penguins_df, aes(x = body_mass_g)) +
+  geom_histogram(aes(y = ..density..), binwidth = 100, fill = "white", color = "black") +# we add this so the y axis is density instead of count.
+  geom_density(alpha = 0.25, fill = "orange")
 
 ```
 
 And similarly to the histogram, we can overlay two or more density plot as well.
 
 ```{r}
-ggplot(penguins_df,
-       mapping = aes(x = body_mass_g,
-                     fill = species)) +
-    geom_density(alpha = 0.5)
+ggplot(penguins_df, aes(x = body_mass_g, fill = species)) +
+  geom_density(alpha = 0.5)
 ```
 
 
@@ -379,11 +382,8 @@ ggplot(penguins_df,
 This one is quite spectacular looking *and* informative. It has a similar function as the overlayed histograms but presents a much clearer data. For this, we need the `ggridges` package which is a `ggplot2` extension.
 
 ```{r}
-ggplot(data = penguins_df,
-       mapping = aes(x = body_mass_g,
-                     y = species,
-                     fill = species)) +
-    geom_density_ridges(scale = 0.8, alpha = 0.5)
+ggplot(penguins_df, aes(x = body_mass_g, y = species, fill = species)) +
+  geom_density_ridges(scale = 0.8, alpha = 0.5)
 ```
 
 
@@ -400,42 +400,43 @@ ess_hun$essround <- factor(ess_hun$essround, ordered = TRUE)
 Let's see the political interest of the Hungarian people.
 ```{r}
 ggplot(ess_hun, aes(polintr)) +
-    geom_bar()
+  geom_bar()
 ```
 
 We can use the `fill` option to map another variable onto our plot. Let's see how these categories are further divided by the gender of the respondents. By default we get a stacked bar chart.
 
 ```{r}
 ggplot(ess_hun, aes(polintr, fill = gndr)) +
-    geom_bar()
+  geom_bar()
 ```
 
 we can use the `position` function in the `geom_bar` to change this. Another neat trick to make our graph more readable is `coord_flip`.
 ```{r}
 ggplot(ess_hun, aes(polintr, fill = gndr)) +
-    geom_bar(position = "dodge") +
-    coord_flip()
+  geom_bar(position = "dodge") +
+  coord_flip()
 ```
 
 Let's make sure that the bars are proportional. For this we can use the `y = ..prop..` and `group = 1` arguments, so the y axis will be calculated as proportions. The `..prop..` is a temporary variable that has the `..` surrounding it so there is no collision with a variable named prop.
 
 ```{r}
 ggplot(ess_hun, aes(polintr, fill = gndr)) +
-    geom_bar(position = "dodge",
-             aes(y = ..prop.., group = gndr)) +
-    coord_flip()
+  geom_bar(position = "dodge", aes(y = ..prop.., group = gndr)) +
+  coord_flip()
 ```
 
 Combining categorical data and continuous data and using `group by` is also doable. We just create a grouped data and have the needed variables computed, then plot it.
 ```{r}
 cont_sum <- gapminder %>% 
     group_by(continent) %>% 
-    summarise(n = n(),
-              life_exp = mean(lifeExp, na.rm = TRUE))
+    summarise(
+      n = n(),
+      life_exp = mean(lifeExp, na.rm = TRUE)
+      )
 
 ggplot(cont_sum, aes(continent, life_exp)) +
-    geom_bar(stat = "identity") +
-    coord_flip()
+  geom_bar(stat = "identity") +
+  coord_flip()
 ```
 
 
@@ -450,15 +451,16 @@ This chart is built in a more complex way as we have to draw the lines and the d
 ```{r warning=FALSE}
 # for the data see the github repository of the workshop
 
-ggplot(data = oecd_sum,
-       mapping = aes(x = year, y = diff, color = hi_lo)) +
+ggplot(oecd_sum, aes(x = year, y = diff, color = hi_lo)) +
   geom_segment(aes(y = 0, x = year, yend = diff, xend = year)) +
   geom_point() +
   theme(legend.position="none") +
-  labs(x = NULL, y = "Difference in Years",
-       title = "The US Life Expectancy Gap",
-       subtitle = "Difference between US and OECD average life expectancies, 1960-2015",
-       caption = "Adapted from Kieran Healy's Data Visualisation (2019), fig.4.21 ")
+  labs(
+    x = NULL, y = "Difference in Years",
+    title = "The US Life Expectancy Gap",
+    subtitle = "Difference between US and OECD average life expectancies, 1960-2015",
+    caption = "Adapted from Kieran Healy's Data Visualisation (2019), fig.4.21 "
+    )
 
 ```
 
@@ -466,10 +468,8 @@ ggplot(data = oecd_sum,
 ## Box plot
 
 ```{r}
-ggplot(data = penguins_df,
-       mapping = aes(x = species,
-                     y = body_mass_g)) +
-    geom_boxplot()
+ggplot(penguins_df, aes(x = species, y = body_mass_g)) +
+  geom_boxplot()
 
 ```
 
@@ -478,11 +478,8 @@ We add color coding to our boxplots as well.
 
 ```{r}
 
-ggplot(data = penguins_df,
-       mapping = aes(x = species,
-                     y = body_mass_g,
-                     fill = species)) +
-    geom_boxplot(alpha = 0.5)
+ggplot(penguins_df, aes(x = species, y = body_mass_g, fill = species)) +
+  geom_boxplot(alpha = 0.5)
 ```
 
 
@@ -490,10 +487,8 @@ ggplot(data = penguins_df,
 ## Violin chart (OPTIONAL)
 
 ```{r}
-ggplot(data = penguins_df,
-       mapping = aes(x = species,
-                     y = body_mass_g)) +
-    geom_violin()
+ggplot(penguins_df, aes(x = species, y = body_mass_g)) +
+  geom_violin()
 ```
 
 
@@ -504,18 +499,20 @@ For this we use data on stock closing prices. As we are now familiar with the gg
 
 ```{r}
 ggplot(stocks, aes(date, stock_closing, color = company)) +
-    geom_line()
+  geom_line()
 ```
 
 Add some refinements.
 
 ```{r}
 ggplot(stocks, aes(date, stock_closing, color = company)) +
-    geom_line(size = 0.7) +
-    labs(x = "", y = "Prices (USD)",
-         title = "Closing daily prices for selected tech stocks",
-         subtitle = "Data from 2016-01-10 to 2018-01-10",
-         caption = "source: Yahoo Finance")
+  geom_line(size = 0.7) +
+  labs(
+    x = "", y = "Prices (USD)",
+    title = "Closing daily prices for selected tech stocks",
+    subtitle = "Data from 2016-01-10 to 2018-01-10",
+    caption = "source: Yahoo Finance"
+    )
 ```
 
 
@@ -523,11 +520,13 @@ Faceting (or creating small multiples) is an excellent way to declutter our plot
 
 ```{r}
 ggplot(stocks, aes(date, stock_closing, color = company)) +
-    geom_line(size = 1) +
-    labs(x = "", y = "Prices (USD)",
-         title = "Closing daily prices for selected tech stocks",
-         subtitle = "Data from 2016-01-10 to 2018-01-10",
-         caption = "source: Yahoo Finance") +
+  geom_line(size = 1) +
+  labs(
+    x = "", y = "Prices (USD)",
+    title = "Closing daily prices for selected tech stocks",
+    subtitle = "Data from 2016-01-10 to 2018-01-10",
+    caption = "source: Yahoo Finance"
+    ) +
     facet_wrap(~company, nrow = 4)
 ```
 
@@ -546,8 +545,10 @@ There comes a moment when you need to create a pie chart. Here is an example of 
 Our data:
 
 ```{r}
-pyramid <- tibble(picture_objects = c(20, 5, 75),
-                  labels = c("Sunny side", "Shady side", "Sky"))
+pyramid <- tibble(
+  picture_objects = c(20, 5, 75),
+  labels = c("Sunny side", "Shady side", "Sky")
+  )
 ```
 
 We create a custom theme as a pie chart deserves all the attention we can give to it:
@@ -622,12 +623,10 @@ Try out a couple to see what they differ in! The `ggthemes` package has a nice c
 
 One of my personal favorite is the `theme_minimal()`
 ```{r}
-ggplot(data = gapminder_df,
-             mapping = aes(x = gdpPercap,
-                           y = lifeExp)) +
-    geom_point(alpha = 0.25) + 
-    scale_x_log10() + 
-    theme_minimal() # adding our chosen theme
+ggplot(gapminder_df, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(alpha = 0.25) + 
+  scale_x_log10() + 
+  theme_minimal() # adding our chosen theme
 ```
 
 
@@ -647,28 +646,24 @@ The key plot elements that we will look at are:
 Adding labels, title, as we did before. For this example we will use the same plot that we created at the beggining of the session.
 
 ```{r}
-ggplot(data = penguins_df,
-       aes(x = body_mass_g,
-           y = flipper_length_mm,
-           color = species)) +
+ggplot(penguins_df, aes(x = body_mass_g, y = flipper_length_mm, color = species)) +
   geom_point() +
-  labs(title = "Penguins, their mass and their flippers",
-       subtitle = "The positive relationship between body mass and flipper size",
-       caption = "Data: Gorman, Williams & Fraser (2014)",
-       x = "Body mass (g)",
-       y = "Flipper length (mm)",
-       color = "")
+  labs(
+    title = "Penguins, their mass and their flippers",
+    subtitle = "The positive relationship between body mass and flipper size",
+    caption = "Data: Gorman, Williams & Fraser (2014)",
+    x = "Body mass (g)",
+    y = "Flipper length (mm)",
+    color = ""
+    )
 ```
 
 Let's use a different color scale! We can use a color brewer scale (widely used for data visualization). To check the various palettes, see [http://colorbrewer2.org](http://colorbrewer2.org)
 
 ```{r}
-ggplot(data = penguins_df,
-       aes(x = body_mass_g,
-           y = flipper_length_mm,
-           color = species)) +
+ggplot(penguins_df, aes(x = body_mass_g, y = flipper_length_mm, color = species)) +
   geom_point() +
-    scale_color_brewer(name = "Species", palette = "Set2") # adding the color brewer color scale
+  scale_color_brewer(name = "Species", palette = "Set2") # adding the color brewer color scale
 
 ```
 
@@ -676,23 +671,16 @@ Or we can define our own colors:
 
 ```{r}
 
-ggplot(data = penguins_df,
-       aes(x = body_mass_g,
-           y = flipper_length_mm,
-           color = species)) +
+ggplot(penguins_df, aes(x = body_mass_g, y = flipper_length_mm, color = species)) +
   geom_point() +
-    scale_color_manual(values=c("coral3", "deepskyblue3", "orange")) # adding our manual color scale
+  scale_color_manual(values=c("coral3", "deepskyblue3", "orange")) # adding our manual color scale
 ```
 
 To make each species more distinc we can use different shapes as well.
 
 ```{r}
 
-ggplot(data = penguins_df,
-       aes(x = body_mass_g,
-           y = flipper_length_mm,
-           color = species,
-           shape = species)) +
+ggplot(penguins_df, aes(x = body_mass_g, y = flipper_length_mm, color = species, shape = species)) +
   geom_point()
 ```
 
@@ -707,16 +695,14 @@ To clean up clutter, we will remove the background, and only leave some of the g
 - As a final touch, the axis line is also recolored
 
 ```{r}
-ggplot(data = penguins_df,
-       aes(x = body_mass_g,
-           y = flipper_length_mm,
-           color = species,
-           shape = species)) +
+ggplot(penguins_df, aes(x = body_mass_g, y = flipper_length_mm, color = species, shape = species)) +
   geom_point() +
-    theme(axis.ticks = element_blank(), # removing axis ticks
-          panel.grid.major.y = element_line(color = "grey", size = 0.1, linetype = "dotted"), # recoloring the panel grids
-          panel.background = element_blank(),
-          axis.line = element_line(colour = "grey")) # removing the background
+  theme(
+    axis.ticks = element_blank(), # removing axis ticks
+    panel.grid.major.y = element_line(color = "grey", size = 0.1, linetype = "dotted"), # recoloring the panel grids
+    panel.background = element_blank(), # removing the background
+    axis.line = element_line(colour = "grey")
+    ) 
 ```
 
 
@@ -725,47 +711,45 @@ Finally, let's move the legend around. Or just remove it with `theme(legend.posi
 
 ```{r}
 
-ggplot(data = penguins_df,
-       aes(x = body_mass_g,
-           y = flipper_length_mm,
-           color = species,
-           shape = species)) +
+ggplot(penguins_df, aes(x = body_mass_g, y = flipper_length_mm, color = species, shape = species)) +
   geom_point() +
-    theme(axis.ticks = element_blank(), # removing axis ticks
-          panel.grid.major.y = element_line(color = "grey", size = 0.1, linetype = "dotted"), # recoloring the panel grids
-          panel.background = element_blank(),
-          axis.line = element_line(colour = "grey"),
-          legend.title = element_text(size = 12), # setting the legends text size
-          text = element_text(face = "plain", family = "sans"), # setting global text options for our plot
-          legend.key=element_blank(),
-          legend.position = "bottom")# removing the background
+  theme(
+    axis.ticks = element_blank(), # removing axis ticks
+    panel.grid.major.y = element_line(color = "grey", size = 0.1, linetype = "dotted"), # recoloring the panel grids
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "grey"),
+    legend.title = element_text(size = 12), # setting the legends text size
+    text = element_text(face = "plain", family = "sans"), # setting global text options for our plot
+    legend.key=element_blank(),
+    legend.position = "bottom"
+    )
 ```
 
 In the final version, we add a custom color palette, the labels and all the modification we made so far.
 
 ```{r}
-ggplot(data = penguins_df,
-       aes(x = body_mass_g,
-           y = flipper_length_mm,
-           color = species,
-           shape = species)) +
+ggplot(penguins_df, aes(x = body_mass_g, y = flipper_length_mm, color = species, shape = species)) +
   geom_point() +
-  labs(title = "Penguins, their mass and their flippers",
-       subtitle = "The positive relationship between body mass and flipper size",
-       caption = "Data: Gorman, Williams & Fraser (2014)",
-       x = "Body mass (g)",
-       y = "Flipper length (mm)",
-       color = "") +
+  labs(
+    title = "Penguins, their mass and their flippers",
+    subtitle = "The positive relationship between body mass and flipper size",
+    caption = "Data: Gorman, Williams & Fraser (2014)",
+    x = "Body mass (g)",
+    y = "Flipper length (mm)",
+    color = ""
+    ) +
   scale_color_brewer(name = "Species", palette = "Set2") +
   scale_shape(guide = FALSE) +
-  theme(axis.ticks = element_blank(), # removing axis ticks
-          panel.grid.major.y = element_line(color = "grey", size = 0.1, linetype = "dotted"), # recoloring the panel grids
-          panel.background = element_blank(),
-          axis.line = element_line(colour = "grey"),
-          legend.title = element_text(size = 12), # setting the legends text size
-          text = element_text(face = "plain", family = "sans"), # setting global text options for our plot
-          legend.key=element_blank(),
-          legend.position = "bottom")# removing the background
+  theme(
+    axis.ticks = element_blank(), # removing axis ticks
+    panel.grid.major.y = element_line(color = "grey", size = 0.1, linetype = "dotted"), # recoloring the panel grids
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "grey"),
+    legend.title = element_text(size = 12), # setting the legends text size
+    text = element_text(face = "plain", family = "sans"), # setting global text options for our plot
+    legend.key=element_blank(),
+    legend.position = "bottom"
+    )
   
 ```
 
@@ -777,11 +761,16 @@ What we use is the `geom_text` to have out labels in the chart.
 
 ```{r}
 gapminder_small <- gapminder_df %>% 
-  filter(lifeExp >= 72.5, gdpPercap >= 10000, continent == "Europe", year == 2002)
+  filter(
+    lifeExp >= 72.5, 
+    gdpPercap >= 10000, 
+    continent == "Europe", 
+    year == 2002
+    )
 
 ggplot(gapminder_small, aes(lifeExp, gdpPercap, label = country)) + # we add the labels!
-    geom_point() +
-    geom_text()
+  geom_point() +
+  geom_text()
 ```
 
 
@@ -790,28 +779,27 @@ To avoid overlapping text, use the `ggrepel` package which provides this functio
 
 ```{r}
 ggplot(gapminder_small, aes(lifeExp, gdpPercap, label = country)) + 
-    geom_point() +
-    ggrepel::geom_text_repel()
+  geom_point() +
+  ggrepel::geom_text_repel()
 
 ```
 
-Without
 
 
 notice the different outcome of `geom_label` instead of `geom_text`.
 
 ```{r}
 ggplot(gapminder_small, aes(lifeExp, gdpPercap, label = country)) + # we add the labels!
-    geom_point() +
-    geom_label() # and use the geom label
+  geom_point() +
+  geom_label() # and use the geom label
 ```
 
 If we want to label a specific set of countries we can do it from inside ggplot, without needing to touch our data. 
 
 ```{r}
 ggplot(gapminder_df, aes(gdpPercap, lifeExp, label = country)) + # we add the labels!
-    geom_point(alpha = 0.25) +
-    geom_text(aes(label = if_else(gdpPercap > 60000, country, NULL))) # we add a conditional within the geom. Note the nudge_x!
+  geom_point(alpha = 0.25) +
+  geom_text(aes(label = if_else(gdpPercap > 60000, country, NULL))) # we add a conditional within the geom. Note the nudge_x!
 ```
 
 
@@ -926,24 +914,27 @@ And now we can plot the map and data with the `geom_polygon()` and `coord_quickm
 ggplot(world_data, aes(long, lat, group = group, fill = lifeExp)) +
   geom_polygon(color = "gray90", size = 0.05 ) +
   coord_quickmap() +
-  labs(fill = "Life expectancy",
-       title = "Life expectancy around the world",
-       subtitle = "1977",
-       caption = "Data: Gapminder") +
+  labs(
+    fill = "Life expectancy",
+    title = "Life expectancy around the world",
+    subtitle = "1977",
+    caption = "Data: Gapminder"
+    ) +
   scale_fill_viridis_c(na.value = "white", direction = -1) +
   theme_bw() +
-  theme(axis.line=element_blank(),
-        axis.text=element_blank(),
-        axis.ticks=element_blank(),
-        axis.title=element_blank(),
-        panel.background=element_blank(),
-        panel.border=element_blank(),
-        panel.grid=element_blank(),
-        panel.spacing=unit(0, "lines"),
-        plot.background=element_blank(),
-        legend.justification = c(0,0),
-        legend.position = c(0,0)
-  )
+  theme(
+    axis.line=element_blank(),
+    axis.text=element_blank(),
+    axis.ticks=element_blank(),
+    axis.title=element_blank(),
+    panel.background=element_blank(),
+    panel.border=element_blank(),
+    panel.grid=element_blank(),
+    panel.spacing=unit(0, "lines"),
+    plot.background=element_blank(),
+    legend.justification = c(0,0),
+    legend.position = c(0,0)
+    )
 
 ```
 
@@ -987,9 +978,11 @@ q8_total <- q8_eurobar %>%
 
 # merging the two dataset to calculate the share of people trusting the EU
 q8_map_merge <- left_join(q8_country_trust, q8_total, by = "geo") %>% 
-  mutate(trust_pct = round((n / sum) * 100),
-         trust_cat = factor(case_when(trust_pct >= 50 ~ 1,
-                               trust_pct < 50  ~ 0)))
+  mutate(
+    trust_pct = round((n / sum) * 100),
+    trust_cat = factor(case_when(trust_pct >= 50 ~ 1,
+                                 trust_pct < 50  ~ 0))
+    )
 ```
 
 Finally, we download the EU shapefile via the eurostat package.
@@ -1015,8 +1008,10 @@ ggplot(eu_map_plot) +
   geom_sf(aes(fill = trust_pct), color= "grey50", size = 0.1) +
   coord_sf(xlim=c(-12,44), ylim=c(35,70)) +
   scale_fill_viridis_c(na.value = "white", direction = -1, name = NULL) +
-  labs(title = "Trust in the European Union",
-       subtitle = "% of Tend to trust") +
+  labs(
+    title = "Trust in the European Union",
+    subtitle = "% of Tend to trust"
+    ) +
   theme_minimal() +
   theme(axis.text = element_blank())
 ```

@@ -106,6 +106,22 @@ polintr_test
 
 In the output we can see the value of the test statistic t = -4.7959 and the p-value = 1.789e-06, which in non-scientific notations is: 0.000001789. These are the two most important pieces of information. If the p-value of the test statistic is below a certain threshold that we have set (usually 0.05), then we can reject the null hypothesis and accept the alternative hypothesis that the true difference in means is not equal to 0 (the null hypothesis is that the difference between the sample means is 0). We can also see the confidence interval and the means for the two groups. In this case there is a statistically significant difference between the two sex about their political interest.
 
+Visualizing the t-test can be done with representing the group means with points and plotting errorbars on top of them. Let's demonstrate this on the political interest. In the following code I also chain together some `dplyr` action and `ggplot2`
+
+```{r}
+
+ess_sample %>% 
+    group_by(gndr) %>% 
+    summarise(group_mean = mean(polintr, na.rm = TRUE), se = sd(polintr, na.rm = TRUE) / sqrt(length(polintr))) %>% 
+    ggplot(aes(x = gndr, y = group_mean, color = gndr)) +
+    geom_point(size = 2) +
+    geom_errorbar(aes(ymin = group_mean - se, ymax = group_mean + se), width=.05) +
+#    scale_y_continuous(limits = c(0, 3.5)) +
+    theme_minimal()
+
+```
+
+
 
 ## ANOVA (OPTIONAL)
 

@@ -16,10 +16,12 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,
-                      collapse = TRUE,
-                      comment = "#>",
-                      message = FALSE
+knitr::opts_chunk$set(
+  echo = TRUE,
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE,
+  fig.align = "center"
 )
 ```
 
@@ -351,6 +353,8 @@ gapminder_df %>%
     select(id, everything()) # everything() is a nice helper function if you want to move one important column to the beginning
 ```
 
+
+Important to know with `left_join` and `right_join`: if on the left/right side of join more than one observation is linked to the unique id on the main dataset, you'll get duplicated rows. More on this discussion: https://stackoverflow.com/questions/49256920/left-join-in-r-dplyr-too-many-observations
 
 
 # Dealing with missing data

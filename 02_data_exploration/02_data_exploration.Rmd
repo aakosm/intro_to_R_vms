@@ -280,6 +280,15 @@ In our first step, we
 1.**group our data by continent** and then 
 2. **create a summary variable**, that tells us the mean GDP for each continent. 
 
+
+```{r echo=FALSE, fig.cap="source: VanderPlas, Jake. Python data science handbook: Essential tools for working with data. " O'Reilly Media, Inc.", 2016 (ch3)}
+
+knitr::include_graphics("figures/split-apply-combine.png")
+
+```
+
+
+
 Check the code snippet below to see the role of each line.
 
 ```{r}

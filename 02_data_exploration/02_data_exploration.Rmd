@@ -577,7 +577,8 @@ knitr::include_graphics("figures/pch-values.png")
 *source: [http://kktg.net/sgr/wp-content/uploads/2014/02/fig-15-3-pch-values.png](http://kktg.net/sgr/wp-content/uploads/2014/02/fig-15-3-pch-values.png)*
 
 ```{r}
-pairs(gapminder_df[, c("lifeExp", "pop", "gdpPercap")],
+pairs(
+  gapminder_df[, c("lifeExp", "pop", "gdpPercap")],
   pch = 19,
   col = rgb(0, 0, 0, alpha = 0.1)
 )

@@ -2,7 +2,7 @@
 title: "A Gentle Introduction"
 subtitle: "Session One"
 author: "Akos Mate"
-date: '2020 July'
+date: '2021 March'
 output:
     html_document:
         code_folding: "show"
@@ -17,10 +17,12 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,
-                      collapse = TRUE,
-                      comment = "#>",
-                      message = FALSE
+knitr::opts_chunk$set(
+  echo = TRUE,
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE,
+  fig.align = "center"
 )
 ```
 
@@ -28,7 +30,8 @@ knitr::opts_chunk$set(echo = TRUE,
 
 > **Contact info**
 >
-> -   Akos: [Mate.Akos\@tk.mta.hu](mailto:Mate.Akos@tk.mta.hu){.email} <br>
+> -   Akos: [Mate.Akos\@tk.mta.hu](mailto:Mate.Akos@tk.hu){.email} <br>
+> -   Eszter: [farkas_eszter\@phd.ceu.edu](mailto:farkas_eszter@phd.ceu.edu){.email} <br>
 > -   Daniel: [Kovarek_Daniel\@phd.ceu.edu](mailto:Kovarek_Daniel@phd.ceu.edu){.email}
 
 > **Course info and materials**
@@ -57,7 +60,7 @@ At the start of each new section you'll see a list of the main packages used for
 
 **Evidence 1:**
 
-```{r out.width = "600px", echo=FALSE, fig.cap="",fig.align='center'}
+```{r out.width = "600px", echo=FALSE, fig.cap=""}
 knitr::include_graphics("figures/r_popularity.png")
 ```
 
@@ -65,7 +68,7 @@ knitr::include_graphics("figures/r_popularity.png")
 
 **Evidence 2:**
 
-```{r out.width = "600px", echo=FALSE, fig.cap="", fig.align='center'}
+```{r out.width = "600px", echo=FALSE, fig.cap=""}
 knitr::include_graphics("figures/r_users.png")
 ```
 
@@ -85,8 +88,8 @@ The goals of this course:
 
 ## Course outline
 
-> -   Monday 27 - Friday 31 July 2020
-> -   \~2 hours of live teaching per day (this includes breaks, Q&A)
+> -   Monday 22 ꟷ Friday 26 March 2021
+> -   \~2.5 hours of live teaching per day (this includes breaks, Q&A)
 
 The course is organized into four blocks, each a logical unit. The actual topics that we are going to cover fit into 8 categories, so we have 2 sessions' length of time buffer (previous years' experience shows that the 8 sessions actually fill the allocated time).
 
@@ -162,7 +165,7 @@ The reasons we start with RStudio Cloud are that:
 
 When you log into the RStudio Cloud and open a project in your workspace you will see something very similar to this figure:
 
-```{r out.width = "600px", echo=FALSE, fig.align='center'}
+```{r out.width = "600px", echo=FALSE}
 knitr::include_graphics("figures/01_cloud_window.png")
 ```
 
@@ -172,7 +175,7 @@ There are 4 panes, each of which we should get familiar with.
 
 Pane 1. is our R script. When you open a brand new project you need to create a new script either by clicking on the top left corner the small dropdown menu (circled in the picture) or by clicking on the `File` menu item. If you don't want to leave your keyboard, the key combination is **`Ctrl + Shift + N`**.
 
-```{r out.width = "600px", echo=FALSE, fig.align='center'}
+```{r out.width = "600px", echo=FALSE}
 knitr::include_graphics("figures/01_1_script.png")
 ```
 
@@ -184,7 +187,7 @@ The R Script is a file with a `.R` extension. It is essentially a text file that
 
 ### The Console
 
-```{r out.width = "600px", echo=FALSE, fig.align='center'}
+```{r out.width = "600px", echo=FALSE}
 knitr::include_graphics("figures/01_02_console.png")
 ```
 
@@ -192,7 +195,7 @@ Pane 2. is the Console. We can write code here and execute it (by pressing Enter
 
 ### The Environment
 
-```{r out.width = "600px", echo=FALSE, fig.align='center'}
+```{r out.width = "600px", echo=FALSE}
 knitr::include_graphics("figures/01_03_environment.png")
 ```
 
@@ -202,7 +205,7 @@ With the little broom icon (circled in the above figure) you can empty your R me
 
 ### The Files, Plots and Help
 
-```{r out.width = "600px", echo=FALSE, fig.align='center'}
+```{r out.width = "600px", echo=FALSE}
 knitr::include_graphics("figures/01_04_files.png")
 ```
 
@@ -216,7 +219,7 @@ Using Projects with RStudio will simplify your and your collaborators' life. Ess
 
 For now, we are going to use RStudio Cloud projects for our first few sessions that I set up, so you can get the hang of it. Later on we'll get into setting up projects on your local computer. Before starting work, please set the highlighted options according the below figure, under **`Tools` -\> `Global Options` -\> `General`**
 
-```{r out.width = "600px", echo=FALSE, fig.align='center'}
+```{r out.width = "600px", echo=FALSE}
 knitr::include_graphics("figures/02_project_options.png")
 ```
 
@@ -239,13 +242,13 @@ To illustrate my point of not caring about knowing every function off the top of
 
 <br><br>
 
-```{r out.width = "500px", echo=FALSE, fig.align='center'}
+```{r out.width = "300px", echo=FALSE}
 
 knitr::include_graphics("figures/peng_twit.png")
 
 ```
 
-```{r out.width = "300px", echo=FALSE, fig.align='center'}
+```{r out.width = "300px", echo=FALSE}
 
 knitr::include_graphics("figures/peng_prof.png")
 
@@ -259,6 +262,10 @@ Some effective ways to seek help with R related problems:
 -   Google "R" followed by the name of the package and/or a very short description of the problem. Like this: **"R ggplot bar chart"**
 -   Google "R" followed by the error message (or part of it) that R gives you.
 -   In most of the cases one of the first hits will be a topic on [StackOverflow](https://stackoverflow.com/). You can use it to ask your own questions, BUT check if it is not a duplicate because there is a good chance that someone else already encountered the same problem that you are searching for.
+
+A great one-stop-shop resource for online R books:
+
+> [Big Book of R](https://www.bigbookofr.com/)
 
 **Since R is an open source project it is a common courtesy to cite R and the packages you use**, as people (often working in academia) put many hours into developing tools and it is in our common interest to give some public recognition to these efforts and contributions. To see how to cite R or you can just type the following:
 
@@ -293,18 +300,16 @@ You can copy and paste code from this html document to your script and run it, b
 We can make R carry out basic calculations with the usual symbols: `+ - / *`. You can run the current line (don't need to select the code) with the `Ctrl + Enter` shortcut.
 
 ```{r  }
-16+80
-
+16 + 80
 ```
 
 R follows the order of operations of course.
 
 ```{r}
 
-4+4/2
+4 + 4 / 2
 
-(3-27+128)*16
-
+(3 - 27 + 128) * 16
 ```
 
 In addition to carry out numerical operations, you can ask R to check if certain logical conditions are met, such as a value is greater or less or equal to another. It is essentially asking R the question of "is this value greater than that value?" to which we will receive an output of `FALSE` or `TRUE`.
@@ -338,6 +343,7 @@ The conditions that you can use in R:
 ## Functions
 
 Functions do the heavy lifting in R. They have the format below:
+
 
 ```{r eval=FALSE}
 
@@ -378,9 +384,9 @@ R let's you save data into the memory by storing it in an object (it's just a fa
 Let's create two objects, where we store the results of some calculations.
 
 ```{r}
-a <- 16+80
+a <- 16 + 80
 
-b <- 4+4/2
+b <- 4 + 4 / 2
 ```
 
 Objects are essential part of the R workflow. You can see your current objects in the right pane named 'Environment'.
@@ -391,7 +397,7 @@ Objects are essential part of the R workflow. You can see your current objects i
 knitr::include_graphics("figures/variable_in_environment.PNG")
 ```
 
-<br>\
+<br>
 <br>
 
 You can check (evaluate) your object by running it's name. Writing the name of your object is equivalent to printing it to your console.
@@ -400,15 +406,14 @@ You can check (evaluate) your object by running it's name. Writing the name of y
 a
 
 print(b)
-
 ```
 
 More importantly, we can perform all sorts of operations on our objects which will be the foundation of our workflow later on. This mean that we can have multiple datasets and objects containing all sorts of information (regression outputs, plots, etc.) in the memory.
 
 ```{r}
-a/2
+a / 2
 
-a*b
+a * b
 ```
 
 ### Data frames
@@ -442,7 +447,7 @@ You can also combine values into a vector. To do this, we use the `c()` function
 c(5, 10, 15, 20)
 
 # operations with vectors
-c(1:4) + c(10,20,30,40)
+c(1:4) + c(10, 20, 30, 40)
 ```
 
 These vectors can have six types: *doubles*, *integers*, *characters*, *logicals*, *complex*, and *raw*. To check if we are indeed dealing with a vector, we can perform the `is.type` question, as below. We can also check its length, just in case. If you are not sure about the type you can skip the trial and error with the `typeof()` function. (we'll skip complex and raw, as they are so niche that you can just check in case you ever need those)
@@ -453,7 +458,6 @@ If you want to refer to a specific value in a vector, you must use square bracke
 num <- c(5, 10, 15, 20)
 
 num[3]
-
 ```
 
 Assigning a new value to the n-th element of our vector works with combining the assignment operator (`<-`) and the `[` indexing we just learned.
@@ -481,7 +485,6 @@ int <- c(4L, 7L, 18L)
 
 
 is.integer(int)
-
 ```
 
 #### Character
@@ -490,7 +493,7 @@ For characters, you have to wrap the values between " " (or ' ') for R to recogn
 
 ```{r  }
 # a vector with character (string) values, with a length of 3 and 1
-text1 <- c("Han", "shot", "first") 
+text1 <- c("Han", "shot", "first")
 
 text2 <- c("Hello world")
 
@@ -531,7 +534,6 @@ You can store logical values in a vector as well. R assigns numerical values to 
 logic <- c(TRUE, FALSE, FALSE)
 
 typeof(logic)
-
 ```
 
 Store the result of a logical evaluation
@@ -570,12 +572,12 @@ party_pref <- factor(party_pref, levels = c("social democrat", "social conservat
 party_pref
 
 # if we want to set a given order, we can do that too.
-survey_response <- factor(c("agree", "neutral", "disagree", "neutral", "disagree", "disagree", "agree"), 
-                          levels = c("agree", "neutral", "disagree"), 
-                          ordered = TRUE)
+survey_response <- factor(c("agree", "neutral", "disagree", "neutral", "disagree", "disagree", "agree"),
+  levels = c("agree", "neutral", "disagree"),
+  ordered = TRUE
+)
 
 survey_response
-
 ```
 
 #### Missing values
@@ -583,7 +585,7 @@ survey_response
 Missing values are denoted with `NA`.
 
 ```{r}
-v <- c(1,2.45, NA, 76, NA)
+v <- c(1, 2.45, NA, 76, NA)
 
 v
 ```
@@ -592,7 +594,6 @@ You can check if a value is missing with the `is.na` function.
 
 ```{r}
 is.na(v)
-
 ```
 
 > QUICK EXCERCISE: Check how many non missing values we have in the object `v`, we just created. The correct solution should be the following output. (Hint: remember that logicals have numerical values!)
@@ -631,7 +632,7 @@ colnames(mat1) <- c("Var1", "Var2", "Var3", "Var4")
 mat1
 ```
 
-### Lists
+### Lists (OPTIONAL)
 
 Lists are versatile data structures where each element can be vectors of different lenght and type. What that means is that we can combine our objects that we created in this session into a list with the `list` function.
 
@@ -644,7 +645,11 @@ list1
 You can add attributes to lists as well.
 
 ```{r}
-list2 <- list(letters = letters[1:6], numbers = c(1:3), logical = c(TRUE, TRUE, FALSE, FALSE, TRUE))
+list2 <- list(
+    letters = letters[1:6], 
+    numbers = c(1:3), 
+    logical = c(TRUE, TRUE, FALSE, FALSE, TRUE)
+    )
 
 attributes(list2)
 ```
@@ -678,7 +683,6 @@ You can change the type of data inside a vector. This is fairly straightforward 
 string_numbers <- c("4", "5")
 
 as.numeric(string_numbers)
-
 ```
 
 From strings to dates (date is an actual data format in R):
@@ -687,10 +691,11 @@ From strings to dates (date is an actual data format in R):
 string_date <- "1999-01-31"
 
 as.Date(string_date)
-
 ```
 
 Coercing functions starts with `as.*`, where \* marks the datatype. Start typing `as.` in RStudio and see how many functions are suggested with this beginning.
+
+NB: "When you attempt to combine different types they will be coerced in a fixed order: character → double → integer → logical." (from [Hadley Wickham's Advanced R](https://adv-r.hadley.nz/vectors-chap.html#testing-and-coercion))
 
 ## Combining stuff into data frame
 
@@ -723,7 +728,6 @@ pupils[2, ]
 
 # check the first column
 pupils[, 1]
-
 ```
 
 Note that the `data.frame()` function creates factors from our character vector. If you want to avoid this (which is usually the case) by an additional argument telling R not to do that: `data.frame(country, pop, stringsAsFactors = FALSE)`

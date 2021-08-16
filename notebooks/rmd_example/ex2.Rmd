@@ -1,0 +1,84 @@
+---
+title: "Insightful paper example"
+author: Akos Mate
+date: "January 2019"
+output: pdf_document
+bibliography: mybib.bib
+abstract: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+  tempor incididunt ut labore et dolore magna aliqua. Ut enimad minim veniam, quis
+  nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
+  aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+  nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+  officia deserunt mollit anim id est laborum.
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.pos = 'h!'
+)
+```
+
+```{r, echo = FALSE}
+library(ggplot2)
+library(dplyr)
+library(gapminder)
+library(stargazer)
+```
+
+# Introduction
+
+**Example article, based on the post of [Kieran Healy: Plain text, papers, pandoc (click if you want to dig deeper)](https://kieranhealy.org/blog/archives/2014/01/23/plain-text/).**
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+In this reprt we investigate the possible connection between life expectancy and GDP per capita. To illustrate our point we will plot the correlation.
+
+
+
+```{r, fig.width=4, fig.height=3, fig.align='center', fig.cap="Effect of GDP per capita on life expectancy"}
+ggplot(data = gapminder,
+       mapping = aes(x = log(gdpPercap),
+                     y = lifeExp)) +
+    geom_point(alpha = 0.3) +
+    geom_smooth(method = "lm") +
+    labs(x = "GDP per capita (log)",
+         y = "Life expectancy",
+         caption = "note: Observations are country years") +
+    theme_minimal()
+```
+
+
+# Discussion
+
+And we run a regression to prove it. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+```{r results = "asis"}
+cs_gapminder <- gapminder %>% 
+    filter(year == 2007)
+
+m1 <- lm(lifeExp ~ log(gdpPercap), data = cs_gapminder)
+
+m2 <- lm(lifeExp ~ log(gdpPercap) + pop, data = cs_gapminder)
+
+m3 <- lm(lifeExp ~ log(gdpPercap) + pop + continent, data = cs_gapminder)
+
+stargazer(m1, m2, m3, title = "OLS models", dep.var.labels = "Life Expectancy", covariate.labels = c("GDP per capita (log)", "Population", "Continent"), type = "latex", header = FALSE)
+```
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+
+Also a summary table for the mtcars dataset.
+
+```{r results = "asis"}
+stargazer(mtcars, title = "Descriptive statistics", header = FALSE)
+```
+
+
+# Conclusion
+
+We used [@gapminder2017] dataset to investigate all we wanted to now. Now we are reasonably sure, that Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Also, [@stargazer2018].
+
+# Bibliography

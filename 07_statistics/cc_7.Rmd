@@ -2,7 +2,7 @@
 title: "Coding challanges for Session Seven"
 subtitle: ""
 author: "Akos Mate"
-date: '2020 July'
+date: '2021 March'
 output:
     html_document:
         code_folding: "show"

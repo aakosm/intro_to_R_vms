@@ -2,7 +2,7 @@
 title: "A Gentle Introduction"
 subtitle: "Session One"
 author: "Akos Mate"
-date: '2021 March'
+date: '2021 August'
 output:
     html_document:
         code_folding: "show"
@@ -34,10 +34,6 @@ knitr::opts_chunk$set(
 > -   Eszter: [farkas_eszter\@phd.ceu.edu](mailto:farkas_eszter@phd.ceu.edu){.email} <br>
 > -   Daniel: [Kovarek_Daniel\@phd.ceu.edu](mailto:Kovarek_Daniel@phd.ceu.edu){.email}
 
-> **Course info and materials**
->
-> -   <https://ceulearning.ceu.edu/course/view.php?id=9930>
-
 # Welcome the the Intro to R course!
 
 Some information about these html documents. They are called notebooks, and they will provide the backbone of the course. They include explanatory text such as this, and R code and R code output. This combination allows you to see the code and the output and also have a detailed explanation for each section that you can come back to whenever needed.
@@ -55,24 +51,6 @@ At the start of each new section you'll see a list of the main packages used for
 -   Reproducible research, which means that your code will produce the exact same output, making it easier to replicate your results or verify your (or others') methods.
 -   Statistical programming is a great transferable skill to have
 -   Free of charge
-
-<br> <br>
-
-**Evidence 1:**
-
-```{r out.width = "600px", echo=FALSE, fig.cap=""}
-knitr::include_graphics("figures/r_popularity.png")
-```
-
-<br> <br>
-
-**Evidence 2:**
-
-```{r out.width = "600px", echo=FALSE, fig.cap=""}
-knitr::include_graphics("figures/r_users.png")
-```
-
-*Source: [https://stackoverflow.blog/2017/10/10/impressive-growth-r/](Stack%20Overflow%20blog)*
 
 ## Outline and goals of the training
 
@@ -95,12 +73,12 @@ The course is organized into four blocks, each a logical unit. The actual topics
 
 -   **Block 1 - Intro to R**
 
-    -   **Session 1 - Intro to R and the basics**
+    -   **Intro to R and the basics**
 
         -   General intro R (video content?)
         -   Introduction to RStudio Cloud / RStudio IDE
 
-    -   **Session 2 - Importing, exporting and exploring data**
+    -   **Importing, exporting and exploring data**
 
         -   Importing data into R
         -   Quickly exploring data
@@ -109,17 +87,17 @@ The course is organized into four blocks, each a logical unit. The actual topics
 
 -   **Block 2 - Working with data**
 
-    -   **Session 3 - Data wrangling part 1**
+    -   **Data wrangling part 1**
 
         -   Introducing the tidyverse tools
         -   Reshaping data
 
-    -   **Session 4 - Data wrangling part 2**
+    -   **Data wrangling part 2**
 
         -   A deep dive into data tasks
         -   Dealing with missing data
 
-    -   **Session 5 - Data visualization**
+    -   **Data visualization**
 
         -   Using ggplot2 package
 
@@ -127,12 +105,12 @@ The course is organized into four blocks, each a logical unit. The actual topics
 
 -   **Block 3 - Down the rabbit hole**
 
-    -   **Session 6 - Writing functions and iterating in R**
+    -   **Writing functions and iterating in R**
 
         -   Writing our own functions
         -   The DRY (don't repear yourself) principle
 
-    -   **Session 7 - Doing statistics in R**
+    -   **Doing statistics in R**
 
         -   Hypothesis testing
         -   OLS regression
@@ -142,7 +120,7 @@ The course is organized into four blocks, each a logical unit. The actual topics
 
 -   **Block 4 - Writing with R**
 
-    -   **Session 8 - Introduction to RMarkdown**
+    -   **Introduction to RMarkdown**
 
         -   Write your articles / dissertation in R
 
@@ -242,7 +220,7 @@ To illustrate my point of not caring about knowing every function off the top of
 
 <br><br>
 
-```{r out.width = "300px", echo=FALSE}
+```{r out.width = "450px", echo=FALSE}
 
 knitr::include_graphics("figures/peng_twit.png")
 
@@ -344,7 +322,6 @@ The conditions that you can use in R:
 
 Functions do the heavy lifting in R. They have the format below:
 
-
 ```{r eval=FALSE}
 
 function(argument1 = value1, argument2 = value2, ...)
@@ -397,8 +374,7 @@ Objects are essential part of the R workflow. You can see your current objects i
 knitr::include_graphics("figures/variable_in_environment.PNG")
 ```
 
-<br>
-<br>
+<br> <br>
 
 You can check (evaluate) your object by running it's name. Writing the name of your object is equivalent to printing it to your console.
 
@@ -439,7 +415,6 @@ To understand how each of these types works and how a data frame is constructed 
 ```{r, echo=FALSE, fig.cap="Wickham, Hadley: Advanced R, O'Reilly (ch3)"}
 knitr::include_graphics("figures/atomic_vector.png")
 ```
-
 
 You can also combine values into a vector. To do this, we use the `c()` function. Below we will create numeric vectors with lenght of four. When you perform operations with vectors keep in mind that R matches the first element of the first vector to the first element of the second vector (called *element-wise execution*). This will result in a new vector with the same lenght as the originals. You can specify each element of the vector or give a range (e.g.: `c(1:4)`)
 
@@ -516,13 +491,13 @@ text3
 >
 > 1.  Create a character vector, which would give the following result.
 
-```{r echo=FALSE}
+```{r echo=TRUE}
 print(c("42", "4", "2"))
 ```
 
 > 2.  combine our previous numerical vector into one. You should see the same result as below (num and a and b). What happens if you try to mix the two type of vectors (num and text1)?
 
-```{r echo=FALSE}
+```{r echo=TRUE}
 print(c(num, a, b))
 ```
 
@@ -598,7 +573,7 @@ is.na(v)
 
 > QUICK EXCERCISE: Check how many non missing values we have in the object `v`, we just created. The correct solution should be the following output. (Hint: remember that logicals have numerical values!)
 
-```{r echo=FALSE}
+```{r echo=TRUE}
 # short solution
 sum(!is.na(v))
 

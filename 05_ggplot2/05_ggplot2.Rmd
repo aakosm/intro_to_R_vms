@@ -2,7 +2,7 @@
 title: "Data visualisation with `ggplot2`"
 author: "Akos Mate"
 subtitle: "Session Five"
-date: '2021 March'
+date: '2021 August'
 output:
     html_document:
         code_folding: "show"
@@ -15,31 +15,63 @@ output:
         css: ../rmd_style.css
 ---
 
+
+
 ```{r setup, include=FALSE}
+options(width=90)
 knitr::opts_chunk$set(
   echo = TRUE,
   collapse = TRUE,
   comment = "#>",
   message = FALSE,
-  fig.align = "center"
+  fig.align = "center",
+  tidy="styler", 
+  tidy.opts=list(width.cutoff=80)
 )
 ```
 
-> Main packages used: `ggplot2`, `ggraph`  
-> Main functions covered: `ggplot()`, `geom_*()`, `scale_*_*()`, `labs()`, `theme_*()` 
+
+
+
+# Data visualization principles[^cwilke]
+
+[^cwilke]: This short section builds heavily on the Part II. of Claus Wilke's brilliant [Fundamentals of Data Visualization](https://clauswilke.com/dataviz/)
+
+> **The principle of proportional ink:** The sizes of shaded areas in a visualization need to be proportional to the data values they represent.
+
+- Linear scale should always start at 0. 
+- Color needs to be applied to serve a purpose, it must be clear, and it must not distract.
+- Consider accessibility, keep your audience in mind.
+- Consider redundant coding: it prompts us to encode data redundantly, using multiple different aesthetic dimensions.
+- For large datasets, consider applying small multiples.
+- Label chart elements properly and informatively
+- Pay attention to your axis labels, axis tick labels, and other assorted plot annotations.
+- Avoid line drawings
+- ABSOLUTELY NO 3D (PIE) CHARTS.
+
+
+```{r, out.width = "350px", echo=FALSE}
+knitr::include_graphics("figures/data-ink.gif")
+```
+
+*source: [Darkhorse Analytics](https://www.darkhorseanalytics.com/blog/data-looks-better-naked)*
+
 
 
 > **Supplementary resources:**
 >
+> - [ggplot2: elegant graphics for data analysis](https://ggplot2-book.org) From Hadley Wickham, Danielle Navarro, and Thomas Lin Pedersen.
 > - [Data Visualization - A practical introduction](http://socviz.co/) from Kieran Healey.
 > - [Fundamentals of Data Visualization](https://serialmentor.com/dataviz/) by Claus O. Wilke
 > - [R Graphics Cookbook](https://r-graphics.org/) by Winston Chang
 > - [ggplot2 cheat sheet](https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-visualization-2.1.pdf)
 > - [list of ggplot2 extensions](https://www.ggplot2-exts.org/)
+> - [The R Graph Gallery](https://www.r-graph-gallery.com/)
 
 
 
-Load our packages.
+
+First things first, let's load our packages.
 ```{r message=FALSE, warning=FALSE}
 # loading and shaping data
 library(readr)
@@ -49,62 +81,17 @@ library(haven)
 # data sources
 library(gapminder)
 library(palmerpenguins)
-library(eurostat)
-library(maps)
 
 # general data visualisation
 library(ggplot2)
 library(ggridges)
 library(ggthemes)
-
-# network related packages
-library(ggraph)
-library(tidygraph)
-
+library(gghighlight)
+library(ggforce)
 ```
 
 
-
-# Data visualization principles
-
-Minimize noise, maximize signal in your graphs (or put it in other ways: maximize the data-ink ratio):
-
-```{r, out.width = "350px", echo=FALSE}
-knitr::include_graphics("figures/data-ink.gif")
-```
-    
-*source: [Darkhorse Analytics](https://www.darkhorseanalytics.com/blog/data-looks-better-naked)*
-
-* Do not lie with your visualization
-* Avoid chart junk
-* Choose the type of plot depending on the type of data
-* Label chart elements properly and informatively
-* Be mindful of where your x and y axis starts (scales can be *really* deceiving otherwise)
-* Use consistent units (do not mix yearly and monthly GDP for example)
-* ABSOLUTELY NO 3D (PIE) CHARTS.
-
-
-
-Appropriate reaction to 3D charts:
-
-```{r, out.width = "350px", echo=FALSE}
-knitr::include_graphics("https://media.giphy.com/media/12XMGIWtrHBl5e/giphy.gif")
-```
-
-
-  
-# `ggplot2` and its extensions
-
-The name stands for *grammar of graphics* and it enables you to build your plot layer by layer and having the ability to control every detail of the output  (if you so wish). It is used by many in academia, by the Financial Times and FiveThirtyEight writers, among many others. During this workshop we will go through various types of data visualizations and try to apply the above set principles to our output.
-
-You create plots with the below syntax:  
-
-```{r, out.width = "300px", echo=FALSE}
-knitr::include_graphics("figures/ggplot_formula.png")
-```
-
-
-Let's load our data that we'll be using this session. (don't worry about the message about the duplicated column names for now)
+Let's also load our data that we'll be using this session. (don't worry about the message about the duplicated column names for now)
 ```{r warning=FALSE, message=FALSE}
 # data
 penguins_df <- palmerpenguins::penguins
@@ -118,11 +105,21 @@ oecd_sum <- read_csv("data/oecd_sum.csv")
 stocks <- read_csv("data/stocks.csv")
 ```
 
+
+The name of `ggplot` stands for *grammar of graphics* and it enables you to build your plot layer by layer and having the ability to control every detail of the output  (if you so wish). It is used by many in academia, data journalism and the data analysis / data science industry[^ft]. We will go through various types of data visualizations and try to apply the above set of principles to our output.
+
+[^ft]: In data journalism, the [Financial Times](https://johnburnmurdoch.github.io/slides/r-ggplot/#/), [BBC](https://medium.com/bbc-visual-and-data-journalism/how-the-bbc-visual-and-data-journalism-team-works-with-graphics-in-r-ed0b35693535) are the most famous ggplot2 users. In the industry, Airbnb, Uber are also prominent users.
+
+You create plots with the below syntax:  
+
+```{r, out.width = "300px", echo=FALSE}
+knitr::include_graphics("figures/ggplot_formula.png")
+```
+
+This can be a little bit overwhelming but worry not as when by the time the session ends you'll be familiar with each element in this general description of a `ggplot2` plot.
+
 ## The logic of a ggplot2 plot
-We now have some experience with making nice figures with `ggplot2`. To kickstart this session, let's review how a plot is made and extend our knowledge on how to fine tune elements of the plot. This section was inspired by the great RLadies [presentation of Eva Maerey](https://evamaerey.github.io/ggplot_flipbook/ggplot_flipbook_xaringan.html#1)
-
-We will use the **Palmerson Penguins dataset**, that contains data for 344 penguins. There are 3 different species of penguins in this dataset, collected from 3 islands in the Palmer Archipelago, Antarctica. The original publication of this data is in [Gorman, Williams & Fraser (2014)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0090081).
-
+To kickstart this session, let's review how a plot is made and extend our knowledge on how to fine tune elements of the plot. This section was inspired by the great RLadies [presentation of Eva Maerey](https://evamaerey.github.io/ggplot_flipbook/ggplot_flipbook_xaringan.html#1) We will use the **Palmerson Penguins dataset**, that contains data for `r nrow(penguins_df)`  penguins. There are `r length(unique(penguins_df$species))` different species of penguins in this dataset, collected from 3 islands in the Palmer Archipelago, Antarctica. The original publication of this data is in [Gorman, Williams & Fraser (2014)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0090081).
 
 
 ```{r out.width = "350px", echo=FALSE, fig.align='center'}
@@ -132,7 +129,9 @@ knitr::include_graphics("figures/02_penguins.png")
 ```  
 Artwork by [allison_horst](https://twitter.com/allison_horst)
 
-### 1
+Now let's build a `ggplot2` plot from the grounds up!
+
+### 1 {-}
 
 First, we **specify the data** we want to use within our `ggplot()` function call with the `data = ` argument. 
 ```{r}
@@ -140,7 +139,7 @@ ggplot(data = penguins_df)
 ```
 
 
-### 2
+### 2 {-}
 
 Second, we **decide on the dimensions of our data**. Let's start by specifying what to plot on the y and x axes. This is done within the `aes()` argument, which stands for 'aesthetic'.
 ```{r}
@@ -151,7 +150,7 @@ ggplot(data = penguins_df,
 ```
 
 
-### 3
+### 3 {-}
 
 Third, we **add our wanted representation** of the data, with the `geom_` function family. 
 ```{r}
@@ -162,7 +161,7 @@ ggplot(data = penguins_df,
 ```
 
 
-### 4
+### 4 {-}
 
 Fourth, we can **add further dimension** to our plot by extending the `aes()` arguments. Let's add colors based on the species variable.
 ```{r}
@@ -173,7 +172,7 @@ ggplot(data = penguins_df,
   geom_point()
 ```
 
-### 5
+### 5 {-}
 
 Fifth, each **aesthetic can be rescaled**. Now we want to rescale our colors. We will use the manual color scale to specify each value. Colors can be added as HEX code, or names.
 ```{r}
@@ -186,7 +185,7 @@ ggplot(data = penguins_df,
 ```
 
 
-### 6
+### 6 {-}
 
 Sixth, we can modify the **textual elements** of our plot. To do this, we can assign a string to every text element with the `labs` function. As we see the color aesthetic created automatically a legend on the side. We can remove the title of it should we want it.
 ```{r}
@@ -208,7 +207,7 @@ ggplot(data = penguins_df,
 ```
 
 
-### 7
+### 7 {-}
 
 Finally, we decide on the **theme** of our hearts. `ggplot2` offers an ocean of customization options for our plot, there are some pre-made themes but we can create our own as well. Now we will stick to `theme_minimal()`.
 ```{r}
@@ -230,174 +229,38 @@ ggplot(data = penguins_df,
 ```
 
 
-## Scatter plot
+## Data visualization staples
 
-We use scatter plot to illustrate some association between two continuous variable. Usually, the `y` axis is our dependent variable (the variable which is explained) and `x` is the independent variable, which we suspect that drives the association. 
+In this section we will cover various key types of visualizations. The structure of this section follows the structure of Claus Wilke's great [Fundamentals of Data Visualization](https://clauswilke.com/dataviz/) book. Here we will cover the most often used type of plots, how to make them and how to address/avoid some of the typical issues.
 
-Now, we want to know what is the association between the GDP per capita and life expectancy
+### Amounts and proportions
 
-```{r}
-ggplot(data = gapminder_df,
-       mapping = aes(x = gdpPercap,
-                     y = lifeExp)) +
-  geom_point()
-```
+```{r out.width = "550px", echo=FALSE, fig.align='center'}
 
-Now that we have a basic figure, let's make it better. We transform the x axis values with the `scale_x_log10()` and add text to our plot with the `labs()` function. Within `geom_point()` we can also specify geom specific options, such as the alpha level (transparency).
+knitr::include_graphics("figures/amounts_types.png")
 
-```{r}
-ggplot(data = gapminder_df,
-       mapping = aes(x = gdpPercap,
-                     y = lifeExp)) +
-    geom_point(alpha = 0.25) + # inside the geom_ we can modify its attributes. Here we set the transparency levels of the points
-    scale_x_log10() + # rescale our x axis
-    labs(
-      x = "GDP per capita", 
-      y = "Life expectancy",
-      title = "Connection between GDP and Life expectancy",
-      subtitle = "Points are country-years",
-      caption = "Source: Gapminder"
-      )
-```
+```  
+Source: [Fundamentals of Data Visualization, 5.1 ch](https://clauswilke.com/dataviz/directory-of-visualizations.html#amounts)
 
 
+#### Bars {-}
 
-To add some analytical power to our plot we can use `geom_smooth()` and choose a `method` for it's smoothing function. It can be `lm`, `glm`, `gam`, `loess`, and `rlm`. We will use the linear model ("lm"). *Note: this is purely for illustrative purposes, as our data points are country-years, so "lm" is not a proper way to fit a regression line to this data.* This example also shows how to plot two geoms into one figure.
-
+We can use the bar charts to visualize categorical data. Let's prep some data. We convert the character variables to factors, because this will let the `ggplot` function know the ordering of our categorical variables. If we want to order our variables according to a particular order, re-leveling the factors are the solution for that.
 
 ```{r}
-ggplot(data = gapminder_df,
-       mapping = aes(x = gdpPercap,
-                     y = lifeExp)) +
-    geom_point(alpha = 0.25) + 
-    geom_smooth(method = "lm", se = TRUE, color = "orange") + # adding the regressiom line
-    scale_x_log10() +
-    labs(
-      x = "GDP per capita", 
-      y = "Life expectancy",
-      title = "Connection between GDP and Life expectancy",
-      subtitle = "Points are country-years",
-      caption = "Source: Gapminder"
-      )
-
-
-```
-
-what if we want to see how each continent fares in this relationship? We need to include a new argument in the mapping function: `color = `. Now it is clear that European countries (country-years) are clustered in the high-GDP/high life longevity upper right corner.
-
-```{r}
-ggplot(data = gapminder_df,
-       mapping = aes(x = gdpPercap,
-                     y = lifeExp,
-                     color = continent)) + # color by category
-    geom_point(alpha = 0.5) + 
-    scale_x_log10() + # rescale our x axis
-    labs(
-      x = "GDP per capita", 
-      y = "Life expectancy",
-      title = "Connection between GDP and Life expectancy",
-      subtitle = "Points are country-years",
-      caption = "Source: Gapminder"
-      )
-    
-```
-
-
-
-We add horizontal line or vertical line to our plot, if we have a particular cutoff that we want to show. We can add these with the `geom_hline()` and `geom_vline()` functions.
-
-```{r}
-ggplot(data = gapminder_df,
-       mapping = aes(x = gdpPercap,
-                     y = lifeExp,
-                     color = continent)) + # color by category
-    geom_point(alpha = 0.5) + 
-    scale_x_log10() +
-    geom_vline(xintercept = 3500) + # adding vertical line 
-    geom_hline(yintercept = 70, linetype = "dashed", color = "black", size = 1) + # adding horizontal line
-    labs(
-      x = "GDP per capita", 
-      y = "Life expectancy",
-      title = "Connection between GDP and Life expectancy",
-      subtitle = "Points are country-years",
-      caption = "Source: Gapminder"
-      )
+ess_hun <- ess_hun %>% 
+  mutate(
+    gndr = factor(gndr, labels = c("Female", "Male")),
+    polintr = factor(polintr, labels = c("Very interested", "Quite interested", "Hardly interested", "Not at all interested", "Refusal", "Don't know"), ordered  = TRUE)
+  )
 
 ```
 
 
+There are two ways to create a barcharts with `ggplot2`: `geom_bar()` and `geom_col()`. The difference between these two is well described by the `ggplot2` [documentation](https://ggplot2.tidyverse.org/reference/geom_bar.html): "`geom_bar()` makes the height of the bar proportional to the number of cases in each group (or if the weight aesthetic is supplied, the sum of the weights). If you want the heights of the bars to represent values in the data, use `geom_col()` instead. `geom_bar()` uses `stat_count()` by default: it counts the number of cases at each x position. `geom_col()` uses `stat_identity()`: it leaves the data as is."
 
-## Histogram
+We will be using `geom_bar()` for this section. Let's see the political interest of the Hungarian people.
 
-Using histograms to check the distribution of the data as we have seen in the intro sessions.
-
-```{r}
-ggplot(gapminder_df, aes(x = lifeExp)) +
-  geom_histogram() 
-```
-
-
-To add some flair to our figure, we use `color` and `fill` inside the `geom_` call. What is the difference between the two?
-```{r}
-ggplot(gapminder_df, aes(x = lifeExp)) +
-  geom_histogram(binwidth = 1, color = "black", fill = "orange") # we can set the colors and border of the bars and set the binwidth or bins 
-```
-
-
-
-## Density plots
-
-A variation on histograms is called density plots that uses Kernel smoothing (fancy! but in reality is a smoothing function which uses the weighted averages of neighboring data points.)
-
-```{r}
-ggplot(penguins_df, aes(x = body_mass_g)) +
-  geom_density()
-```
-
-Add some fill
-```{r}
-ggplot(penguins_df, aes(x = body_mass_g)) +
-  geom_density(fill = "orange", alpha = 0.3)
-```
-
-Your intuition is correct, we can overlap this with our histogram. To keep the `y` axis consistent between the histogram and the density plot, we use the `..density..` term for the `geom_histogram` to avoid having the frequency on the `y` axis.
-
-```{r}
-ggplot(penguins_df, aes(x = body_mass_g)) +
-  geom_histogram(aes(y = ..density..), binwidth = 100, fill = "white", color = "black") +# we add this so the y axis is density instead of count.
-  geom_density(alpha = 0.25, fill = "orange")
-
-```
-
-And similarly to the histogram, we can overlay two or more density plot as well.
-
-```{r}
-ggplot(penguins_df, aes(x = body_mass_g, fill = species)) +
-  geom_density(alpha = 0.5)
-```
-
-
-## Ridgeline / Joyplot
-
-This one is quite spectacular looking *and* informative. It has a similar function as the overlayed histograms but presents a much clearer data. For this, we need the `ggridges` package which is a `ggplot2` extension.
-
-```{r}
-ggplot(penguins_df, aes(x = body_mass_g, y = species, fill = species)) +
-  geom_density_ridges(scale = 0.8, alpha = 0.5)
-```
-
-
-## Bar charts
-
-We can use the bar charts to visualize categorical data. Let's prep some data. (for refresher, check the first session on factors!) For diversifying our approaches for educational purposes this recoding is done in base R but we could have done it in `dplyr` as well. 
-
-```{r}
-ess_hun$gndr <- factor(ess_hun$gndr, labels = c("Male", "Female"))
-ess_hun$polintr <- factor(ess_hun$polintr, labels = c("Very interested", "Quite interested", "Hardly interested", "Not at all interested", "Refusal", "Don't know"), ordered  = TRUE)
-ess_hun$essround <- factor(ess_hun$essround, ordered = TRUE)
-```
-
-Let's see the political interest of the Hungarian people.
 ```{r}
 ggplot(ess_hun, aes(polintr)) +
   geom_bar()
@@ -425,24 +288,32 @@ ggplot(ess_hun, aes(polintr, fill = gndr)) +
   coord_flip()
 ```
 
-Combining categorical data and continuous data and using `group by` is also doable. We just create a grouped data and have the needed variables computed, then plot it.
+Combining categorical data and continuous data and using `group by` is also doable. We just create a grouped data and have the needed variables computed, then plot it. For this example, we'll compute the average bill length for each penguin species in our sample and plot it with a barplot.
 ```{r}
-cont_sum <- gapminder %>% 
-    group_by(continent) %>% 
-    summarise(
-      n = n(),
-      life_exp = mean(lifeExp, na.rm = TRUE)
-      )
+penguins_sum <- penguins_df %>% 
+    group_by(species) %>% 
+    summarise(avg_bill_length = mean(bill_length_mm, na.rm = TRUE))
+```
 
-ggplot(cont_sum, aes(continent, life_exp)) +
+
+```{r out.width = "350px", echo=FALSE, fig.align='center'}
+
+knitr::include_graphics("figures/culmen_depth.png")
+
+```  
+Artwork by [allison_horst](https://twitter.com/allison_horst)
+
+
+```{r}
+ggplot(penguins_sum, aes(species, avg_bill_length)) +
   geom_bar(stat = "identity") +
   coord_flip()
 ```
 
 
-### Lollipop charts
+#### Dots (OPTIONAL) {-}
 
-The lollipop chart is a better barchart in a sense that it conveys the same information with better data/ink ratio. It also looks better. (note: some still consider it a gimmick)
+A special type of dot plots is the lollipop chart. The lollipop chart is a better barchart in a sense that it conveys the same information with better data/ink ratio. It also looks better. (note: some still consider it a gimmick)
 
 For this we will modify a chart from the [Data Visualisation textbook](http://socviz.co/groupfacettx.html#avoid-transformations-when-necessary)
 
@@ -465,7 +336,127 @@ ggplot(oecd_sum, aes(x = year, y = diff, color = hi_lo)) +
 ```
 
 
-## Box plot
+#### Heatmaps (OPTIONAL) {-}
+
+The idea behind heatmaps is to map the values onto colors instead of bars or dots. For this we will use the `geom_tile` function. To have a manageable size we'll subset the gapminder dataframe for European countries and pipe that data right into the ggplot function. It is always good practice to have some logic guiding the order of the categorical variables apart from alphabetical order. For this plot we use the `reorder()` function to reorder the countries by their gdp.
+
+```{r}
+gapminder_df %>% 
+  filter(continent == "Europe") %>% 
+  ggplot(aes(year, reorder(country, gdpPercap), fill = gdpPercap)) +
+  geom_tile(color = "grey")
+```
+
+
+
+
+
+## Distributions
+
+```{r out.width = "550px", echo=FALSE, fig.align='center'}
+
+knitr::include_graphics("figures/distribution_types.png")
+
+```  
+Source: [Fundamentals of Data Visualization, 5.1 ch](https://clauswilke.com/dataviz/directory-of-visualizations.html#distributions)
+
+
+
+#### Histogram {-}
+
+Now let's introduce ourselves to the gapminder dataset and check some of the variables' distribution. The data is a panel dataset, so our observations are country-years.
+
+```{r}
+ggplot(gapminder_df, aes(x = lifeExp)) +
+  geom_histogram() 
+```
+
+
+To add some flair to our figure, we use `color` and `fill` inside the `geom_` call. What is the difference between the two? Note that here we changed the `bindiwdth` parameter of the `geom_histogram` and the resolution of the histogram changed accordingly.
+
+```{r}
+ggplot(gapminder_df, aes(x = lifeExp)) +
+  geom_histogram(binwidth = 1, color = "black", fill = "orange") # we can set the colors and border of the bars and set the binwidth or bins 
+```
+
+We can plot the distribution by continent as well, using the `fill` aesthetic option.
+
+```{r}
+ggplot(gapminder_df, aes(x = lifeExp, fill = continent)) +
+  geom_histogram()
+```
+
+
+
+#### Density plot (OPTIONAL) {-}
+
+A variation on histograms is called density plots that uses Kernel smoothing (fancy! but in reality is a smoothing function which uses the weighted averages of neighboring data points.)
+
+```{r}
+ggplot(penguins_df, aes(x = body_mass_g)) +
+  geom_density()
+```
+
+Add some fill
+```{r}
+ggplot(penguins_df, aes(x = body_mass_g)) +
+  geom_density(fill = "orange", alpha = 0.3)
+```
+
+Your intuition is correct, we can overlap multiple density plots. For this we will use the `fill` aesthetic and create a different fill for each penguin species. To have some visibility, we set the `alpha` level to a more transparent value.
+
+```{r}
+ggplot(penguins_df, aes(x = body_mass_g, fill = species)) +
+  geom_density(alpha = 0.35, color = "white")
+
+```
+
+
+
+#### Ridgeline (OPTIONAL) {-}
+
+This one is quite spectacular looking *and* informative. It has a similar function as the overlayed histograms but presents a much clearer data. For this, we need the `ggridges` package which is a `ggplot2` extension. They are most useful when we have to visualize distributions over times (or a large amount of distributions). For this we will use the `airquality` dataset, which is a built in example dataset.
+
+```{r}
+airquality_df <- airquality %>% 
+  mutate(
+    temp_c = (Temp - 30) / 2,
+    month = factor(Month, ordered = TRUE)
+    )
+  
+
+head(airquality_df)
+```
+
+
+```{r}
+ggplot(airquality_df, aes(x = temp_c, y = month, fill = month)) +
+  geom_density_ridges(scale = 0.8, alpha = 0.5)
+```
+My all time favorite example for a ridge plot is probably the fun survey on [Perceptions of probability](https://github.com/zonination/perceptions).
+
+
+#### Jitter plot (OPTIONAL) {-}
+
+Plotting the actial data points also provide a great visual overview of the data distribution. However, in order to avoid overplotting the points we will *jitter* them, using the appropriately names `geom_jitter()` function.
+
+```{r}
+ggplot(penguins_df, aes(x = species, y = body_mass_g)) +
+  geom_jitter()
+```
+
+
+####  Box plot {-}
+
+The box plot is a good way to visualize distributions in your data, although it can be a but misleading. Interpretation of the box plot is that the following. The box contains 50% of the values, the whiskers are the minimum and maximum values without the outlines, the line inside the box is the median. The upper and lower edges of the box are the first and third quartiles, respectively.
+
+In visual form:
+
+```{r, out.width = "700px", echo=FALSE}
+knitr::include_graphics("figures/EDA-boxplot.png")
+```
+
+*Source: [Wickham, Hadley, and Garrett Grolemund. R for data science: import, tidy, transform, visualize, and model data. " O'Reilly Media, Inc.", 2016.](http://r4ds.had.co.nz/exploratory-data-analysis.html)*
 
 ```{r}
 ggplot(penguins_df, aes(x = species, y = body_mass_g)) +
@@ -474,41 +465,188 @@ ggplot(penguins_df, aes(x = species, y = body_mass_g)) +
 ```
 
 
-We add color coding to our boxplots as well.
+To add some visual flair, we can color the outlier points and also show the actual datapoints by also plotting `geom_jitter`.
 
 ```{r}
 
-ggplot(penguins_df, aes(x = species, y = body_mass_g, fill = species)) +
-  geom_boxplot(alpha = 0.5)
+ggplot(penguins_df, aes(x = species, y = body_mass_g)) +
+  geom_boxplot(outlier.color = "orange") + 
+  geom_jitter(alpha = 0.25)
 ```
 
+#### Violin plots (OPTIONAL) {-}
 
-
-## Violin chart (OPTIONAL)
+Violin plots are the density based variants of the boxplots. They are created by plotting a density plot for the variable, rotating it 90 degrees and then mirroring the plot. 
 
 ```{r}
 ggplot(penguins_df, aes(x = species, y = body_mass_g)) +
   geom_violin()
 ```
 
+#### Sina plots (OPTIONAL) {-}
 
-## Line chart
-
-
-For this we use data on stock closing prices. As we are now familiar with the ggplot2 syntax, I do not write out all the `data = ` and `mapping = `.
+Sina plots are essentially representing data points with the same density as the violin plots. The `geom_sina` function is provded by the `ggforce` ggplot extension.
 
 ```{r}
-ggplot(stocks, aes(date, stock_closing, color = company)) +
+ggplot(penguins_df, aes(x = species, y = body_mass_g)) +
+  geom_sina()
+```
+
+
+Similarly to the overlayed boxplot we can combine the sina plot with the violin plot to some nice effect. (I used a pre-defined theme here, more on this shortly!)
+
+```{r}
+ggplot(penguins_df, aes(x = species, y = body_mass_g)) +
+  geom_sina() + 
+  geom_violin(alpha = 0.25, fill = "grey") +
+  theme_minimal()
+```
+
+
+## x ~ y relationships
+
+So far we were mainly visualizing descriptive statistical properties, now it is time to check for some association within our datasets. 
+
+```{r out.width = "550px", echo=FALSE, fig.align='center'}
+
+knitr::include_graphics("figures/xy_relationship.png")
+
+``` 
+Source: [Fundamentals of Data Visualization, 5.1 ch](https://clauswilke.com/dataviz/directory-of-visualizations.html#xy-relationships)
+
+### Scatterplot {-}
+
+We use scatter plot to illustrate some association between two continuous variable. Usually, the `y` axis is our dependent variable (the variable which is explained) and `x` is the independent variable, which we suspect that drives the association. 
+
+Now, we want to know what is the association between the GDP per capita and life expectancy.
+
+```{r}
+ggplot(data = gapminder_df,
+       mapping = aes(x = lifeExp,
+                     y = gdpPercap)) +
+  geom_point()
+```
+
+What are the problems with this plot?
+
+Now that we have a basic figure, let's make it better and deal with some of the issues. We transform the y axis values with the `scale_y_log10()` and add text to our plot with the `labs()` function. Within `geom_point()` we can also specify geom specific options, such as the alpha level (transparency). This way we address the issue of overplotting as well as the log transformation creates a "more normal" distribution.
+
+```{r}
+ggplot(data = gapminder_df,
+       mapping = aes(x = lifeExp,
+                     y = gdpPercap)) +
+    geom_point(alpha = 0.25) +
+    scale_y_log10() +
+    labs(
+      y = "GDP per capita", 
+      x = "Life expectancy",
+      title = "Connection between GDP and Life expectancy",
+      subtitle = "Points are country-years",
+      caption = "Source: Gapminder"
+      )
+```
+
+
+
+To add some analytical power to our plot we can use `geom_smooth()` and choose a `method` for it's smoothing function. It can be `lm`, `glm`, `gam`, `loess`, and `rlm`. We will use the linear model ("lm"). *Note: this is purely for illustrative purposes, as our data points are country-years, so "lm" is not a proper way to fit a regression line to this data.* This example also shows how to plot two geoms into one figure.
+
+
+```{r}
+ggplot(data = gapminder_df,
+       mapping = aes(x = lifeExp,
+                     y = gdpPercap)) +
+    geom_point(alpha = 0.25) + 
+    geom_smooth(method = "lm", se = TRUE, color = "orange") +
+    scale_y_log10() +
+    labs(
+      y = "GDP per capita", 
+      x = "Life expectancy",
+      title = "Connection between GDP and Life expectancy",
+      subtitle = "Points are country-years",
+      caption = "Source: Gapminder"
+    )
+
+
+```
+
+what if we want to see how each continent fares in this relationship? We need to include a new argument in the mapping function: `color = `. Now it is clear that European countries (country-years) are clustered in the high-GDP/high life longevity upper right corner.
+
+```{r}
+ggplot(data = gapminder_df,
+       mapping = aes(x = lifeExp,
+                     y = gdpPercap,
+                     color = continent)) +
+    geom_point(alpha = 0.5) + 
+    geom_smooth(method = "lm", se = TRUE, color = "black") +
+    scale_y_log10() +
+    labs(
+      y = "GDP per capita", 
+      x = "Life expectancy",
+      title = "Connection between GDP and Life expectancy",
+      subtitle = "Points are country-years",
+      caption = "Source: Gapminder"
+    )
+    
+```
+
+
+
+We add horizontal line or vertical line to our plot, if we have a particular cutoff that we want to show. We can add these with the `geom_hline()` and `geom_vline()` functions. In the below example we'll draw horizontal and vertical lines at the median and average of the x and y axis. Similarly to the geoms introduced so far, we can change the type of these lines, with the `linetype` option. It can be “blank”, “solid”, “dashed”, “dotted”, “dotdash”, “longdash”, “twodash”.
+
+```{r}
+ggplot(data = gapminder_df,
+       mapping = aes(x = lifeExp,
+                     y = gdpPercap,
+                     color = continent)) +
+  geom_point(alpha = 0.5) + 
+  geom_vline(xintercept = mean(gapminder_df$lifeExp), linetype = "dashed") +
+  geom_hline(yintercept = median(gapminder_df$gdpPercap), linetype = "dotted") +
+  scale_y_log10() +
+  labs(
+    y = "GDP per capita", 
+    x = "Life expectancy",
+    title = "Connection between GDP and Life expectancy",
+    subtitle = "Points are country-years",
+    caption = "Source: Gapminder"
+  )
+
+```
+
+### Bubble chart (OPTIONAL) {-}
+
+To replicate the famous gapminder bubble chart we will encode a third dimension alongside our life expectancy and GDP percapita variables. This is going to be the size of the country. In order to have a manageable plot we will use the 2002 cross section. Using size we can embed a new dimension, however we should be mindful not to overburden the audience with information.
+
+```{r}
+gapminder_df %>% 
+  filter(year == 2002) %>% 
+  ggplot(aes(x = lifeExp, y = gdpPercap, size = pop, color = continent)) +
+  geom_point(alpha = 0.8) +
+  scale_y_log10()
+```
+
+### Line graphs {-}
+
+For this we use data on stock closing prices. As we are now familiar with the ggplot2 syntax, I do not write out all the `data = ` and `mapping = `. Note that here we have to use the group argument to group our data according to companies. 
+
+```{r}
+ggplot(stocks, aes(date, stock_index, group = company)) +
   geom_line()
 ```
 
-Add some refinements.
+Add some refinements. One way to highlight our focus (let's say $AMZN stocks) is to use the `gghighlight` package which provides this useful extension.
+
 
 ```{r}
-ggplot(stocks, aes(date, stock_closing, color = company)) +
-  geom_line(size = 0.7) +
+ggplot(stocks, aes(date, stock_index, group = company)) +
+  geom_line() +
+  gghighlight(
+    company == "AMZN.Close", 
+    use_direct_label = TRUE, 
+    label_params = list(size = 3)
+    ) +
   labs(
-    x = "", y = "Prices (USD)",
+    x = "", 
+    y = "Index, 2006/01/11 = 100",
     title = "Closing daily prices for selected tech stocks",
     subtitle = "Data from 2016-01-10 to 2018-01-10",
     caption = "source: Yahoo Finance"
@@ -516,13 +654,17 @@ ggplot(stocks, aes(date, stock_closing, color = company)) +
 ```
 
 
-Faceting (or creating small multiples) is an excellent way to declutter our plot.
+Faceting (or creating small multiples) is an excellent way to declutter our plot. To drop the legend from the side, we'll drop the guide from the `scale_color_discrete` function using the `guide = FALSE` option. To highlight the trend in our stock data, we can color the area under the curves as well, with the `geom_area`.
 
 ```{r}
-ggplot(stocks, aes(date, stock_closing, color = company)) +
-  geom_line(size = 1) +
+ggplot(stocks, aes(date, stock_index, color = company)) +
+  geom_line() +
+  geom_area(aes(fill = company), alpha = 0.6) +
+  scale_color_discrete(guide = FALSE) +
+  scale_fill_discrete(guide = FALSE) +
   labs(
-    x = "", y = "Prices (USD)",
+    x = "", 
+    y = "Index, 2006/01/11 = 100",
     title = "Closing daily prices for selected tech stocks",
     subtitle = "Data from 2016-01-10 to 2018-01-10",
     caption = "source: Yahoo Finance"
@@ -530,54 +672,9 @@ ggplot(stocks, aes(date, stock_closing, color = company)) +
     facet_wrap(~company, nrow = 4)
 ```
 
-
-
 > QUICK EXCERCISE:
 > Create a plot from the gapminder datase, where:
 > you show the distribution of life expectancy for each continent. Use `facet_wrap` or `facet_grid`
-
-
-
-## Pie Chart (OPTIONAL)
-
-There comes a moment when you need to create a pie chart. Here is an example of one acceptable use case of this technique.
-
-Our data:
-
-```{r}
-pyramid <- tibble(
-  picture_objects = c(20, 5, 75),
-  labels = c("Sunny side", "Shady side", "Sky")
-  )
-```
-
-We create a custom theme as a pie chart deserves all the attention we can give to it:
-
-```{r}
-theme_pyramid <- function() {
-  theme_minimal() %+replace%
-    theme(
-      axis.line=element_blank(),
-      axis.text=element_blank(),
-      axis.ticks=element_blank(),
-      axis.title=element_blank(),
-      panel.grid=element_blank(),
-      legend.title=element_blank()
-    )
-}
-```
-
-
-And we plot:
-
-```{r}
-ggplot(pyramid, aes(x = "", y = picture_objects, fill = labels)) +
-  geom_bar(stat = "identity") +
-  scale_fill_manual(values = c("#0095D9","#F5E837", "#C4B730"), breaks = c("Sky", "Sunny side", "Shady side")) +
-  coord_polar("y", start = 8.9) +
-  theme_pyramid()
-```
-
 
 
 
@@ -586,7 +683,7 @@ ggplot(pyramid, aes(x = "", y = picture_objects, fill = labels)) +
 ## Themes
 In this section we will go over some of the elements that you can modify in order to get an informative and nice looking figure. `ggplot2` comes with a number of themes. You can play around the themes that come with `ggplot2` and you can also take a look at the `ggthemes` package, where I included the economist theme. Another notable theme collection is the `hrbthemes` package. The BBC also published their R package which they use to create their graphics. You can find it on GitHub here: [https://github.com/bbc/bbplot](https://github.com/bbc/bbplot)
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 penguins_small <- sample_frac(penguins_df, size = 0.4)
 
 p1 <- ggplot(data = penguins_small,
@@ -803,238 +900,6 @@ ggplot(gapminder_df, aes(gdpPercap, lifeExp, label = country)) + # we add the la
 ```
 
 
-> QUICK EXCERCISE: Choose a dataset that we've used in this session so far, and create a plot where:
-> 1) You modify the color and size of the geom
-> 2) You add your own labels to the plot
-> 3) Modify at least one theme element
-
-
-# Special cases (OPTIONAL)
-
-## Network visualization
-Let's load our data from an edgelist. We are using the `tidygraph` `ggraph` packages, but both are heavily dependent on the `igraph` package which is one of the most powerful one for network analysis in R.
-
-```{r}
-# data
-edges_got <- read_csv("https://raw.githubusercontent.com/melaniewalsh/sample-social-network-datasets/master/sample-datasets/game-of-thrones/got-edges.csv")
-```
-
-
-let's create the network object and add some network statistics to our small social network
-```{r}
-soc_nw <- as_tbl_graph(edges_got, directed = FALSE) %>% 
-  activate(nodes) %>% 
-  mutate(centrality = centrality_eigen(), community = as.factor(group_infomap()))
-```
-
-
-We plot the network with the `ggraph()` function, that is a network oriented extension of `ggplot2`. The nodes and links are plotted separately with the `geom_edge_*` and `geom_node_*`. In this case `link` and `point`.
-```{r warning=FALSE}
-ggraph(soc_nw, layout = "kk") +
-  geom_edge_link(alpha = 0.35) +
-  geom_node_point()
-```
-
-alternative with modifications to link and node attributes. Note the `theme_graph()` at the end.
-```{r warning=FALSE}
-ggraph(soc_nw, layout = "fr") +
-  geom_edge_link(aes(width = Weight), alpha = 0.2) +
-  scale_edge_width(range = c(0.5,2)) +
-  geom_node_point(aes(size = centrality), alpha = 0.8) +
-  theme_graph()
-```
-
-final touch, let's add the communities in the network and labels for our nodes.
-
-```{r warning=FALSE}
-ggraph(soc_nw, layout = "fr") +
-  geom_edge_link(aes(width = Weight), alpha = 0.2, show_guide = FALSE) +
-  scale_edge_width(range = c(0.5,1.5)) +
-  geom_node_point(aes(size = centrality, color = community), alpha = 0.8, show_guide = FALSE) +
-  geom_node_text(aes(label = if_else(centrality >= 0.35, name, NULL)), size = 3, repel = TRUE, show_guide = FALSE) +
-  scale_color_brewer(palette = "Set2") +
-  labs(title = "Social network of the Song of Ice and Fire books",
-       caption = "Data: <github.com/melaniewalsh/sample-social-network-datasets>") +
-  theme_graph()
-
-```
-
-
-## Maps
-Two essential parts of creating a map with `ggplot2`:
-- shapefile which draws the map
-- some data that we want to plot over the map
-
-Getting the map data from the `maps` package
-```{r}
-world <- map_data("world")
-```
-
-
-We can plot the empty map 
-```{r}
-ggplot(data = world,
-       mapping = aes(x = long, y = lat, group = group)) +
-  geom_polygon(fill = "white", color = "black") +
-  coord_cartesian()
-```
-
-
-We can also subset the map data, just as we can with any other R object
-```{r}
-# subsetting the world data
-world_subset <- world[world$region == "France",]
-
-ggplot(data = world_subset,
-       mapping = aes(x = long, y = lat, group = group)) +
-  geom_polygon(fill = "white", color = "black") +
-  coord_cartesian()
-```
-
-
-
-
-We can add data to our map. We subset our gapminder data for the year 1977. Then add a new row that matches the region variable in the map data so we can merge the two dataset. (we also get rid of Antarctica, because of aesthetics)
-
-```{r}
-year_2000 <- gapminder_df %>% 
-  filter(year == 1977) %>% 
-  mutate(country = as.character(country))
-
-# adding key variable for merge
-year_2000$region <- year_2000$country
-
-# merging the data and the map and getting rid of antarctica
-world_data <- left_join(world, year_2000, by = "region") %>% 
-  filter(region != "Antarctica")
-```
-
-And now we can plot the map and data with the `geom_polygon()` and `coord_quickmap()`. I also made some modifications to the theme, so it looks better.
-```{r}
-ggplot(world_data, aes(long, lat, group = group, fill = lifeExp)) +
-  geom_polygon(color = "gray90", size = 0.05 ) +
-  coord_quickmap() +
-  labs(
-    fill = "Life expectancy",
-    title = "Life expectancy around the world",
-    subtitle = "1977",
-    caption = "Data: Gapminder"
-    ) +
-  scale_fill_viridis_c(na.value = "white", direction = -1) +
-  theme_bw() +
-  theme(
-    axis.line=element_blank(),
-    axis.text=element_blank(),
-    axis.ticks=element_blank(),
-    axis.title=element_blank(),
-    panel.background=element_blank(),
-    panel.border=element_blank(),
-    panel.grid=element_blank(),
-    panel.spacing=unit(0, "lines"),
-    plot.background=element_blank(),
-    legend.justification = c(0,0),
-    legend.position = c(0,0)
-    )
-
-```
-
-
-
-
-
-### example from the Eurostat package
-
-The [vignette](https://ropengov.github.io/eurostat/articles/eurostat_tutorial.html#maps) contains the full tutorial on how to use the eurostat package to get data through the eurostat API. If you are interested check it out later.
-
-For this example we are going to use the Eurobarometer data to plot trust in the EU. We select the country iso codes and the relevant item (q8a_10). Then we create a proper factor with the mutate function, as well as recode some obscure country codes that would cause problems with merging further down the line. For this we do this ugly looking nested `dplyr::if_else` chain. Finally we drop NAs.
-```{r}
-eurobarometer_raw <- read_stata("data/ZA6963_v1-0-0.dta")
-
-q8_eurobar <- eurobarometer_raw %>% 
-  select(isocntry, qa8a_10) %>% 
-  mutate(trust_in_eu = factor(qa8a_10, levels = c(1,2,3), labels = c("Tend to trust", "Tend not to trust", "Don't know")),
-         geo = if_else(isocntry == "DE-W", "DE", 
-                       if_else(isocntry == "DE-E","DE",
-                               if_else(isocntry == "GB-GBN", "UK",
-                                       if_else(isocntry == "GB-NIR", "UK", isocntry))))) %>%  
-  tidyr::drop_na()
-```
-
-
-Then we see what is the proportion of people trusting the EU in each member state.
-
-```{r}
-# share of respondent who trust the EU
-q8_country_trust <- q8_eurobar %>% 
-  group_by(geo, qa8a_10) %>% 
-  summarise(n = sum(n())) %>% 
-  ungroup() %>% 
-  filter(qa8a_10 == 1)
-
-# total number of respondents
-q8_total <- q8_eurobar %>% 
-  group_by(geo) %>% 
-  summarise(sum = n())
-
-# merging the two dataset to calculate the share of people trusting the EU
-q8_map_merge <- left_join(q8_country_trust, q8_total, by = "geo") %>% 
-  mutate(
-    trust_pct = round((n / sum) * 100),
-    trust_cat = factor(case_when(trust_pct >= 50 ~ 1,
-                                 trust_pct < 50  ~ 0))
-    )
-```
-
-Finally, we download the EU shapefile via the eurostat package.
-
-```{r}
-eu_map <- eurostat::get_eurostat_geospatial(resolution = "60") %>% 
-  filter(LEVL_CODE == 0)
-```
-
-To plot the data on the map we have to combine the shapefile and the survey data with a `left_join`.
-
-```{r}
-eu_map_plot <- left_join(eu_map, q8_map_merge, by = "geo")
-
-```
-
-
-Now we are ready to plot! We use `geom_sf()` to fill the countries with our data and `coord_sf` to have the map projected between the given coordinates. For the color scale, let's use the viridis scale. Altough we use the `theme_minimal` we can make additional changes to the theme by adding the `theme()` call last.
-
-
-```{r}
-ggplot(eu_map_plot) +
-  geom_sf(aes(fill = trust_pct), color= "grey50", size = 0.1) +
-  coord_sf(xlim=c(-12,44), ylim=c(35,70)) +
-  scale_fill_viridis_c(na.value = "white", direction = -1, name = NULL) +
-  labs(
-    title = "Trust in the European Union",
-    subtitle = "% of Tend to trust"
-    ) +
-  theme_minimal() +
-  theme(axis.text = element_blank())
-```
-
-
-
-
-
-If we want to add arbitrary points to the map, we can do that by specifying the longitudinal and latitudinal coordinates.
-
-```{r}
-long <- c(10)
-lat <- c(50)
-my_city <- as.data.frame(cbind(long,lat))
-```
-
-
-Then just plot over our map with the `geom_point()`
-
-```{r}
-ggplot(data=eu_map_plot) + 
-  geom_sf(fill= "white", color="dim grey", size=.1) + 
-  geom_point(data = my_city, aes(x = long, y = lat), color = "orange", size = 5, alpha = 0.7) +
-  theme_light() +
-  coord_sf(xlim=c(-12,44), ylim=c(35,70))
-```
+> QUICK EXCERCISE!
+> With the tools we've covered, make a sensible version of this chart. 
+> The details are up to you!

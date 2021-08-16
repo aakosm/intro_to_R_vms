@@ -2,7 +2,7 @@
 title: "Transforming and wrangling data 1/2"
 subtitle: "Session Three"
 author: "Akos Mate"
-date: '2021 March'
+date: '2021 August'
 output:
     html_document:
         code_folding: "show"
@@ -25,42 +25,40 @@ knitr::opts_chunk$set(
 )
 ```
 
-
-> Main packages used: `tidyr`, `dplyr`, `base R`     
-> Main functions covered: `tidyr::pivot_longer`, `tidyr::pivot_wider`, `dplyr::group_by`, `dplyr::summarise`, `dplyr::bind_rows`, `dplyr::bind_cols` ,`runif`, `[`, `[[`  
-
+> Main packages used: `tidyr`, `dplyr`, `base R`\
+> Main functions covered: `tidyr::pivot_longer`, `tidyr::pivot_wider`, `dplyr::group_by`, `dplyr::summarise`, `dplyr::bind_rows`, `dplyr::bind_cols` ,`runif`, `[`, `[[`
 
 > **Supplementary resources:**
 >
-> - [Data Wrangling cheat sheet](https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-transformation.pdf)
+> -   [Data Wrangling cheat sheet](https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-transformation.pdf)
 
 # Tidyverse overview
 
 From this session we will mostly start using packages from the `tidyverse` ecosystem. These include:
 
-* `readr` for reading text data (.csv and .tsv)
-* `tidyr` for reshaping your data
-* `dplyr` for wrangling data (filtering your data, subsetting, transforming and recoding variables, etc.)
-* `purrr` for functional programming
-* `ggplot2` for data visualization
-* `R markdown` for creating reports straight from R (.pdf, .html or .doc)
+-   `readr` for reading text data (.csv and .tsv)
+-   `tidyr` for reshaping your data
+-   `dplyr` for wrangling data (filtering your data, subsetting, transforming and recoding variables, etc.)
+-   `purrr` for functional programming
+-   `ggplot2` for data visualization
+-   `R markdown` for creating reports straight from R (.pdf, .html or .doc)
 
 ```{r, out.width = "550px", echo=FALSE}
 knitr::include_graphics("figures/tidyverse1.png")
 ```
 
-The "base R vs. tidyverse" debate has been going on in the R community for a while now, but it provides a quick and consistent way to start data analysis, strong community support and robust adoption rate in both inside and outside of academia. If you want some background thoughts on this, you can read a blogpost of David Robinson, data scientist at Heap on why teach tidyverse first: [http://varianceexplained.org/r/teach-tidyverse/](http://varianceexplained.org/r/teach-tidyverse/).
+The "base R vs. tidyverse" debate has been going on in the R community for a while now, but it provides a quick and consistent way to start data analysis, strong community support and robust adoption rate in both inside and outside of academia. If you want some background thoughts on this, you can read a blogpost of David Robinson, data scientist at Heap on why teach tidyverse first: <http://varianceexplained.org/r/teach-tidyverse/>.
 
 While the focus is on the tidyverse approach, the optional sections include alternative solutions, termed base R.
 
-
 ## The pipe
 
-The pipe is this operator: ` %>% ` You can access with the shortcut of **`Ctrl+Shift+M`** (or type it out every time, but there are better things in life than that).  
+The pipe is this operator: `%>%` You can access with the shortcut of **`Ctrl+Shift+M`** (or type it out every time, but there are better things in life than that).
 
-What it does, is it passes object on left hand side as first argument of function on righthand side. 
+What it does, is it passes object on left hand side as first argument of function on righthand side.
 
 As an example:
+
 ```{r, eval=FALSE}
 head(mydata)
 
@@ -70,6 +68,22 @@ mydata %>% head()
 ```
 
 Piping together various steps of our data manipulation process greatly increases code readability and our quality of life. In a moment we will see how piping can be super useful.
+
+The pipe is really useful to avoid nesting and allows us to write code in a more legible way. Consider the example below ([courtesy of Andrew Heiss](https://twitter.com/andrewheiss/status/1359583543509348356)):
+
+- Without pipe:
+```{r, eval=FALSE}
+leave_house(get_dressed(get_out_of_bed(wake_up(me, time = "8:00"), side = "correct"), pants = TRUE, shirt = TRUE), car = TRUE, bike = FALSE)
+```
+
+
+```{r, eval=FALSE}
+me %>%
+  wake_up(time = "8:00") %>%
+  get_out_of_bed(side = "correct") %>%
+  get_dressed(pants = TRUE, shirt = TRUE) %>%
+  leave_house(car = TRUE, bike = FALSE)
+```
 
 
 # Tidy data
@@ -82,9 +96,7 @@ library(tidyr) # for reshaping data
 library(readr) # loading data
 ```
 
-
 We should use "tidy data" whenever possible. This means that each row is an observation and each column is a variable. This is best understood with this figure from the [R for Data Science](http://r4ds.had.co.nz/tidy-data.html) book:
-
 
 ```{r, out.width = "650px", echo=FALSE}
 knitr::include_graphics("figures/tidy-data.png")
@@ -105,8 +117,6 @@ wide_df <- data.frame(
 )
 ```
 
-
-
 ```{r echo=FALSE}
 long_df <- wide_df %>%
   gather(key = "year", value = inflation, "2006":"2009")
@@ -120,12 +130,14 @@ wide_df
 ```
 
 And the transformed long data format.
+
 ```{r echo=FALSE, collapse=FALSE}
 # long data format
 long_df
 ```
 
 Illustrating of what is happening from the [R for Data Science](http://r4ds.had.co.nz/tidy-data.html):
+
 ```{r, out.width = "650px", echo=FALSE}
 knitr::include_graphics("figures/tidy_gather.png")
 ```
@@ -134,7 +146,7 @@ knitr::include_graphics("figures/tidy_gather.png")
 
 We will use the `tidyr` package to shape our data into the desired format. A key concept is the key-value pairs. For the wide dataset above, the values are the inflation numbers and the keys are the column headers (years). So the `1.2` (2007 inflation in Hungary) and `2007` is such a key-value pair.
 
-We will use this concept to our transformations. The main function we'll use from `tidyr` are the `pivot_longer()` to create tidy data from wide data format. 
+We will use this concept to our transformations. The main function we'll use from `tidyr` are the `pivot_longer()` to create tidy data from wide data format.
 
 Let's load our dummy dataset.
 
@@ -144,7 +156,6 @@ wide_df <- read_csv("data/wide_df.csv")
 
 wide_df
 ```
-
 
 ```{r eval=FALSE, echo=FALSE}
 
@@ -163,7 +174,7 @@ wide_df
 write.csv(wide_df, file = "data/wide_df.csv", row.names = FALSE)
 ```
 
-Let's use the `tidyr::pivot_longer()` function and let's meet the ` %>% ` pipe operator (shortcut: **`Ctrl + Shift + M`**) again! Here, we specify the range of columns (`cols`) that contain our key-value pairs, and also the `names_to` (the year in this case) and the `values_to` (inflation).
+Let's use the `tidyr::pivot_longer()` function and let's meet the `%>%` pipe operator (shortcut: **`Ctrl + Shift + M`**) again! Here, we specify the range of columns (`cols`) that contain our key-value pairs, and also the `names_to` (the year in this case) and the `values_to` (inflation).
 
 ```{r}
 long_df <- wide_df %>%
@@ -179,7 +190,6 @@ Perfect! What if we want to go back to our wide format? Let's use the `tidyr::pi
 long_df %>%
   tidyr::pivot_wider(names_from = "year", values_from = "inflation")
 ```
-
 
 ## Appending data
 
@@ -227,10 +237,10 @@ We should use the `bind_rows` function from `dplyr`.
 dplyr::bind_rows(df2, df3)
 ```
 
-
 The corresponding `base R` commands are `cbind()` and `rbind()`.
 
 # Quick detour: `base R` indexing and subsetting
+
 (This section was adopted from [Martin Mölder](https://martinmolder.com/)'s 2017 course)
 
 We have covered some parts of it already, but (if time permits) this section will give a short rundown of how to split datasets with `base R` indexing. While I think the `dplyr` approach that we will be using after this is more straightforward it is useful to at least know that there are multiple ways to access/subset/split datasets. Many online help that you'll see will either use the `dplyr` or the `base` approach and it is helpful if you can reverse engineer it.
@@ -248,14 +258,13 @@ df2[c(1:3), ]
 df2[c(1, 3), ]
 ```
 
-
 For splitting databases based on some conditions, let's remember our logical operators from before. Let's select all of the countries which are above 30 million in population. First, let's check how many values meet this criteria.
 
 ```{r}
 df2$pop > 30
 ```
 
-This will give as a vector of logical values that has the same length as we have rows in the data set. And we can use that to select rows – the rows with `TRUE` are selected and the rows with `FALSE` are not. We just have to put the vector of logical values where the row index of the data object is.
+This will give as a vector of logical values that has the same length as we have rows in the data set. And we can use that to select rows -- the rows with `TRUE` are selected and the rows with `FALSE` are not. We just have to put the vector of logical values where the row index of the data object is.
 
 ```{r}
 df2[df2$pop > 30, ]

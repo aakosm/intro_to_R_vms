@@ -2,7 +2,7 @@
 title: "Working with RMarkdown"
 author: "Akos Mate"
 subtitle: "Session Eight"
-date: '2020 July'
+date: '2021 August'
 output:
     html_document:
         code_folding: "show"
@@ -29,6 +29,7 @@ knitr::opts_chunk$set(echo = TRUE,
 > - [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/),    
 > - [R markdown cheat sheet](https://raw.githubusercontent.com/rstudio/cheatsheets/master/rmarkdown-2.0.pdf),    
 > - [R Markdown reference guide](https://rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
+> - [The visual RMarkdown editor (zotero integration)](https://rstudio.github.io/visual-markdown-editing/#/)
 > - [RStudio: Bibliographies and Citations](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html),    
 > - [Yan Holtz: Pimp my RMD - a few tips for R Markdown](https://holtzy.github.io/Pimp-my-rmd/),   
 > - [Kieran Healy: Plain text, papers, pandoc](https://kieranhealy.org/blog/archives/2014/01/23/plain-text/),     
@@ -244,6 +245,8 @@ The `bibliography` is one of the key argument if you are writing academic papers
 
 You can get this type of citation from Google Scholar as well. After you prepared your `.bib` file, you just need to specify it in the YAML header as such: `bibliography: mybib.bib`. 
 
+> Important new development in RStudio 1.4 + is the Visual Markdown Editor which now includes a great Zotero support: https://rstudio.github.io/visual-markdown-editing/#/
+
 * To insert the citation into the paper, you need to use the following syntax: `[@bibkey]` where the bib key is the identifier in the `@article{bibkey, ...}`. In our case, it is "albrecht1999time".   
 * To cite this seminal contribution to science, we type: `[@albrecht1999time]` which will give us this: [@albrecht1999time].   
 * For in text citation, just use `@albrecht1999time`: @albrecht1999time  
@@ -371,8 +374,12 @@ A quick example of what a possible article written in RMarkdown looks like is he
 The example article is based on the post of [Kieran Healy: Plain text, papers, pandoc](https://kieranhealy.org/blog/archives/2014/01/23/plain-text/) (click if you
 want to dig deeper).
 
+For a great and accessible guide on how RStudio (1.4.+) integrates with **Zotero** read this excellent blog post: https://blog.rstudio.com/2020/11/09/rstudio-1-4-preview-citations/  
 
-The source for that document is in the Github repository "/rmd_example/ex2.rmd", but for posterity, here is the rmd source (note: you will need the mybib.bib for it to run, which is also in the same folder)
+For the visual RMarkdown editor, see this blogpost: https://blog.rstudio.com/2020/09/30/rstudio-v1-4-preview-visual-markdown-editing/
+
+
+The source for that document is in the zip file you downloaded from Canvas  ("/rmd_example/ex2.rmd"), but for posterity, here is the rmd source (note: you will need the mybib.bib for it to run, which is also in the same folder).
 ```{r example2, echo=FALSE}
 cat(htmltools::includeText("rmd_example/ex2.rmd"))
 ```

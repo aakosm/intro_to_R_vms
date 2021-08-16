@@ -2,7 +2,7 @@
 title: "Coding challanges for Session Three"
 subtitle: ""
 author: "Akos Mate"
-date: '2020 July'
+date: '2021 March'
 output:
     html_document:
         code_folding: "show"
@@ -32,7 +32,7 @@ knitr::opts_chunk$set(echo = TRUE,
 # Excercise 1 - Reshaping data
 > (1) load a data set on financial data of Microsoft and Tesla from the `03_data_wrangling1\data` folder from the file `stock_data.csv`.  
 > (2) The dataset contains 3 columns: a date and closing prices for Tesla and Microsoft shares.  
-> (3) Use the `gather()` function to create a new data frame, with 3 variables: date, company and stock_closing. You should see something similar than below.
+> (3) Use the `pivot_longer()` function to create a new data frame, with 3 variables: date, company and stock_closing. You should see something similar than below.
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 library(dplyr)

@@ -6,12 +6,12 @@
 
 **For new installs:**
 
-- Having the latest versions of both R and RStudio is advised. For R it is **R-4.0.2**, for RStudio it is  **RStudio Desktop 1.3.959.**
+- Having the latest versions of both R and RStudio is advised. For R it is **R-4.0.+**, for RStudio it is  **RStudio Desktop 1.4+**
 
 
 **If you already have R and RStudio on your computer:**
 
-- Make sure that the R version is **at least 4.0.0**, and for **RStudio, 1.2.5042** and above.
+- Make sure that the R version is **at least 4.0.0**, and for **RStudio, 1.4.+** and above.
 
 
 ## Download and install R

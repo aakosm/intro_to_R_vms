@@ -2,7 +2,7 @@
 title: "Writing functions and flow control in R"
 author: "Akos Mate"
 subtitle: "Session Five"
-date: '2021 March'
+date: '2021 August'
 output:
     html_document:
         code_folding: "show"
@@ -23,7 +23,7 @@ knitr::opts_chunk$set(echo = TRUE,
 )
 ```
 
-> Main packages used:`purrr`, `base R`     
+> Main packages used:`purrr`, `base R`\
 > Main functions covered: `for`, `if`, `else`, `while`, `function(x){}`, `apply`, `lapply`, `purrr::map`  
 
 
@@ -323,7 +323,7 @@ msleep_df$new_awake
 > Write a loop which takes in a character vector and prints out "IT'S A CAT" if the value of the string is "cat" and "It's not a cat :'(((" whenever the value is not "cat". <br>
 > The result should look something like this for the following input `x <- c("cat", "mouse")`:
 
-```{r echo=FALSE}
+```{r echo=TRUE}
 x <- c("cat", "mouse")
 
 

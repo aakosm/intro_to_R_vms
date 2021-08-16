@@ -2,7 +2,7 @@
 title: "Transforming and wrangling data 2/2"
 author: "Akos Mate"
 subtitle: "Session Four"
-date: '2021 March'
+date: '2021 August'
 output:
     html_document:
         code_folding: "show"
@@ -26,8 +26,8 @@ knitr::opts_chunk$set(
 ```
 
 
-> Main packages used: `dplyr`   
-> Main functions covered: `dplyr::filter()`, `dplyr::select()`, `dplyr::mutate()`, `dplyr::*_join()`, ``, `is.na()`, `tidyr::drop_na()`
+> Main packages used: `dplyr`\   
+> Main functions covered: `dplyr::filter()`, `dplyr::select()`, `dplyr::mutate()`, `dplyr::*_join()`, `is.na()`, `tidyr::drop_na()`
 
 
 > **Supplementary resources:**
@@ -117,7 +117,7 @@ gapminder_df %>%
 > Quick excercise: filter the gapminder dataset to see countries in the Americas where life expectancy was between 75 and 80 after 1995. You should get something similar as below.
 
 Solution should look like this:
-```{r echo=FALSE}
+```{r echo=TRUE}
 gapminder_df %>% 
     filter(continent == "Americas",  
            lifeExp >= 75, 
@@ -171,7 +171,7 @@ There are various helper functions that you can embed within `select`:
 > Quick Excercise: select columns where the variable name starts with "co"
 
 Solution should look like this:
-```{r echo=FALSE}
+```{r echo=TRUE}
 gapminder_df %>% 
     select(starts_with("co"))
 ```
@@ -216,7 +216,7 @@ We can also combine `select`and `filter` for filtering for all of the selected v
 > Quick excercise: Check the top5 countries in 2007 who had the highest life expectancy! You should get something similar as below. Use the functions that we have covered so far in this session!
 
 Solution should look like this:
-```{r echo=FALSE}
+```{r echo=TRUE}
 gapminder_df %>% 
     select(country, year, lifeExp) %>% 
     arrange(desc(lifeExp)) %>% 
@@ -226,7 +226,7 @@ gapminder_df %>%
 
 
 ## Recoding and creating new variables
-`dplyr` makes it easy to recode our columns and create new ones with the `dplyr::mutate()` and `dplyr::transmute()` functions. `mutate()` let's you do all the stuff that we covered when we looked at vectors. You have the option to have the calculation results in a new column (preferable) or overwrite an existing one (probably not the best idea).
+`dplyr` makes it easy to recode our columns and create new ones with the `dplyr::mutate()` function. `mutate()` let's you do all the stuff that we covered when we looked at vectors. You have the option to have the calculation results in a new column (preferable) or overwrite an existing one (probably not the best idea).
 
 Let's recode the pop variable to show population by a thousand using the `mutate` function. We will call our new variable pop_k.
 

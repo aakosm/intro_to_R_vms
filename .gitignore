@@ -33,3 +33,4 @@ test
 video_scripts.md
 notebooks/
 *.zip
+.vscode/

@@ -31,3 +31,5 @@ ecpr_admin/
 course_dev/
 test
 video_scripts.md
+notebooks/
+*.zip

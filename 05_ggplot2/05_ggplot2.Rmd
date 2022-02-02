@@ -2,7 +2,7 @@
 title: "Data visualisation with `ggplot2`"
 author: "Akos Mate"
 subtitle: "Session Five"
-date: '2021 August'
+date: '2022 February'
 output:
     html_document:
         code_folding: "show"
@@ -730,6 +730,14 @@ ggplot(gapminder_df, aes(x = gdpPercap, y = lifeExp)) +
 ## Plot elements
 
 Of course we can set all elements to suit our need, without using someone else's theme.
+<br>
+<br>
+
+```{r out.width = "700px", echo=FALSE, fig.align='center', fig.cap="Source: ggplot2 Theme Elements Demonstration (https://henrywang.nl/ggplot2-theme-elements-demonstration/)"}
+
+knitr::include_graphics("figures/theme_elements.png")
+
+```
 
 The key plot elements that we will look at are:  
 

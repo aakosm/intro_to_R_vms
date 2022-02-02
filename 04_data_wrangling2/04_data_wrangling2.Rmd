@@ -2,7 +2,7 @@
 title: "Transforming and wrangling data 2/2"
 author: "Akos Mate"
 subtitle: "Session Four"
-date: '2021 August'
+date: '2022 February'
 output:
     html_document:
         code_folding: "show"
@@ -32,7 +32,7 @@ knitr::opts_chunk$set(
 
 > **Supplementary resources:**
 >
-> - [Suzan Baert's blogpost series](https://suzanbaert.netlify.app/2018/01/dplyr-tutorial-1/)
+> - [Suzan Baert's blogpost series](https://suzanbaert.netlify.app/2018/01/dplyr-tutorial-1/) (a bit old but still great for starting out)
 > - [Data Wrangling cheat sheet](https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-transformation.pdf)
 
 

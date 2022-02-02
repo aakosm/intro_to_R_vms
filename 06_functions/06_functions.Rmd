@@ -2,7 +2,7 @@
 title: "Writing functions and flow control in R"
 author: "Akos Mate"
 subtitle: "Session Five"
-date: '2021 August'
+date: '2022 February'
 output:
     html_document:
         code_folding: "show"
@@ -267,7 +267,7 @@ for (i in seq_along(input)){
      } else {
          num_test <- input[i]%%2 == 0 # the `%%` operator returns the modulus. if 0 then even, if not, odd.
          if (num_test) {
-             cat(i, "is even; ") # cat is a more flexible print function, which can combine objects and strings
+             cat(i, "is even; ") # cat() is a more flexible print function, which can combine objects and strings
          } else {
              cat(i, "is odd; ")
          }
@@ -323,7 +323,7 @@ msleep_df$new_awake
 > Write a loop which takes in a character vector and prints out "IT'S A CAT" if the value of the string is "cat" and "It's not a cat :'(((" whenever the value is not "cat". <br>
 > The result should look something like this for the following input `x <- c("cat", "mouse")`:
 
-```{r echo=TRUE}
+```{r echo=FALSE}
 x <- c("cat", "mouse")
 
 

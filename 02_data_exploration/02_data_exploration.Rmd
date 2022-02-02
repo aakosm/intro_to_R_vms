@@ -2,7 +2,7 @@
 title: "Importing and Exploring Data in R"
 subtitle: "Session Two"
 author: "Akos Mate"
-date: '2021 August'
+date: '2022 February'
 output:
     html_document:
         code_folding: "show"
@@ -25,7 +25,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-> Main packages used: `haven`, `readxl`, `readr`\
+> Main packages used: `haven`, `readxl`, `readr`
+>
 > Main functions covered: `readr::read_csv`, `readr::write_csv`, `readxl::read_excel`, `haven::read_stata` `haven::read_spss`
 
 > **Supplementary resources:**
@@ -241,11 +242,17 @@ One key advantage of the `tidyverse` packages is their compatibility with the us
 
 **The `%>%` essentially pipes the data on it's left as the first argument for function after it.**
 
+```{r, fig.cap="Intuition behind the pipe. (thanks to Andrew Heiss, https://twitter.com/andrewheiss/status/1359583543509348356", out.width = "600px", echo=FALSE}
+knitr::include_graphics("figures/aheiss_pipe.jpg")
+```
+
+#### The powerful split-apply-combine approach
+
 In our first step, we
 
 1.**group our data by continent** and then 2. **create a summary variable**, that tells us the mean GDP for each continent.
 
-```{r echo=FALSE, fig.cap="source: VanderPlas, Jake. Python data science handbook: Essential tools for working with data. (ch3)"}
+```{r echo=FALSE, fig.cap="source: VanderPlas, Jake. Python data science handbook: Essential tools for working with data. (ch3)", out.width = "600px"}
 
 knitr::include_graphics("figures/split-apply-combine.png")
 ```
@@ -281,14 +288,6 @@ Using data visualization is a great way to get acquainted with your data and som
 We will spend most of our time using `ggplot2` for visualizing in the class and I would personally encourage the course participants to stick to `ggplot2`. If for some reason you would like a non ggplot way of plotting in R, there is a section on base R plotting at the end of this notebook.
 
 The name stands for *grammar of graphics* and it enables you to build your plot layer by layer and having the ability to control every detail of the output (if you so wish). It is used by many in academia and in industry, including Uber, StackOverflow, AirBnB, the Financial Times, BBC and FiveThirtyEight, among others.
-
-You create plots with the below syntax:
-
-```{r, out.width = "300px", echo=FALSE}
-knitr::include_graphics("figures/ggplot_formula.png")
-```
-
-*Source: Kieran, Healy. Data Visualisation: A Practical Introduction. PRINCETON University Press, 2018. [(Ch.3)](http://socviz.co/makeplot.html#how-ggplot-works)*
 
 To have some idea about our variables, lets plot them on a histogram. First, we examine the GDP per capita variable from our gapminder dataset. To this, we just use the `geom_histogram()` function of `ggplot2`. It gives a bare-bones histogram of the (frequency distribution of our chosen continuous variable) of the chosen variable.
 

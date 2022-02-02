@@ -2,7 +2,7 @@
 title: "Transforming and wrangling data 1/2"
 subtitle: "Session Three"
 author: "Akos Mate"
-date: '2021 August'
+date: '2022 February'
 output:
     html_document:
         code_folding: "show"

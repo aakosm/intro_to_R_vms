@@ -2,7 +2,7 @@
 title: "Doing statistics in R"
 subtitle: "Session Seven"
 author: "Akos Mate"
-date: '2021 August'
+date: '2022 February'
 output:
     html_document:
         code_folding: "show"
@@ -199,7 +199,7 @@ We can visualize correlation with scatter plots.
 
 > Quick excercise: plot the relationship between life expectancy and GDP per capita with the `ggplot` package. No need to tinker with the plot this time. For extra, you can add a linear trend line with the `geom_smooth()`
 
-```{r echo=TRUE}
+```{r echo=FALSE}
 ggplot(gapminder_cs, aes(gdpPercap, lifeExp)) +
     geom_point() +
     geom_smooth(method = "lm")
@@ -322,13 +322,19 @@ ggplot(data = reg1_aug,
     geom_point()
 ```
 
-Or create a coefficient plot. (Don't forget to add the `conf.int` parameter as `TRUE` to the `tidy()` call.) For `geom_errorbar` the `width` argument controls the size of the whiskers, for the `geom_errorbarh`, it is the `height =`
+Or create a coefficient plot. (Don't forget to add the `conf.int` parameter as `TRUE` to the `tidy()` call.) For `geom_errorbar` the `width` argument controls the size of the whiskers, for the `geom_errorbarh`, it is the `height =` To guide the reader's eye, let's highliht the significant variables. Let's say we are highlighting variables significant at the p < 0.001 level. 
 
 ```{r}
-ggplot(reg1_tidy, aes(term, estimate, color = term)) +
-    geom_point() +
-    geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.1)) +
-    coord_flip()
+reg1_tidy_p <- reg1_tidy %>% 
+  mutate(significant = as.factor(ifelse(p.value < 0.001, 1, 0))) %>% 
+  filter(term != "(Intercept)")
+
+ggplot(reg1_tidy_p, aes(reorder(term, estimate), estimate, color = significant)) +
+  geom_point() +
+  scale_color_manual(values = c("grey", "black"), guide = FALSE) +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.1)) +
+  coord_flip() +
+  theme_classic()
 ```
 
 ## Working with survey data (OPTIONAL)

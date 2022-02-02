@@ -2,7 +2,7 @@
 title: "A Gentle Introduction"
 subtitle: "Session One"
 author: "Akos Mate"
-date: '2021 August'
+date: '2022 January'
 output:
     html_document:
         code_folding: "show"
@@ -31,8 +31,7 @@ knitr::opts_chunk$set(
 > **Contact info**
 >
 > -   Akos: [Mate.Akos\@tk.mta.hu](mailto:Mate.Akos@tk.hu){.email} <br>
-> -   Eszter: [farkas_eszter\@phd.ceu.edu](mailto:farkas_eszter@phd.ceu.edu){.email} <br>
-> -   Daniel: [Kovarek_Daniel\@phd.ceu.edu](mailto:Kovarek_Daniel@phd.ceu.edu){.email}
+
 
 # Welcome the the Intro to R course!
 
@@ -66,7 +65,7 @@ The goals of this course:
 
 ## Course outline
 
-> -   Monday 22 ꟷ Friday 26 March 2021
+> -   Monday 7 ꟷ Friday 11 February 2022
 > -   \~2.5 hours of live teaching per day (this includes breaks, Q&A)
 
 The course is organized into four blocks, each a logical unit. The actual topics that we are going to cover fit into 8 categories, so we have 2 sessions' length of time buffer (previous years' experience shows that the 8 sessions actually fill the allocated time).
@@ -213,6 +212,13 @@ Let's talk about keeping your R and other projects safe from tornadoes, toddlers
 > -   R is case sensitive, so use lowercase file and variable names. Separate words with underscore `_` (e.g.: `ols_1`) (or you can do the camelCase thing, but be consistent)
 
 ## Getting help and citing R and packages
+
+```{r out.width = "450px", echo=FALSE, fig.cap="Wisdom of the Ancients (https://xkcd.com/979/)", fig.align='center'}
+
+knitr::include_graphics("figures/01_wisdom_of_the_ancients.png")
+
+```
+
 
 It is OK to get stuck in R and look for help. Don't worry if don't remember a function's name or arguments by heart, as with everything the more you write R, the more you can recall from memory. Programming (R included) requires great Google search skills (or DuckDuckGo, if you are not keen on Google) but just like drawing, math or sword forging for the Japanese emperor, it requires a great amount of practice and not some innate magical ability that only 5% of the living population is gifted by a benevolent coding deity. My advice: find your pet projects, find joy in R and coding, do not give up and use Google and StackOverflow without any hesitation.
 

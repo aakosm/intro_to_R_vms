@@ -1,5 +1,11 @@
 # Introduction to R - ECPR Methods School
 
+- [Introduction to R - ECPR Methods School](#introduction-to-r---ecpr-methods-school)
+  - [Purpose of the course](#purpose-of-the-course)
+  - [Key topics covered](#key-topics-covered)
+  - [Course notebooks](#course-notebooks)
+  - [For future reference](#for-future-reference)
+
 ## Purpose of the course
 
 The goal of this course is to provide an accessible entry into the world of R which prepares the participants to confidently approach the most common analysis tasks using R. This includes data cleaning, exploratory data analysis, creating visualizations or writing entire academic papers using RMarkdown. Unfortunately R has a reputation for a steep learning curve, but our aim is to dispel this myth and show how a range of recent developments make R not just powerful, but more accessible to newcomers. The course is designed to be accessible to those who have never used any programming language and also contains optional parts for those who have some prior experience with R or other languages.
